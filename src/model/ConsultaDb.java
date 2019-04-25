@@ -1,6 +1,6 @@
 package model;
 
 public class ConsultaDb {
-//comentario
+//NOVA MUDANÇA
 
 }
