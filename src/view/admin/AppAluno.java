@@ -1,4 +1,4 @@
-package view;
+package view.admin;
 
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.widgets.Button;
@@ -13,6 +13,8 @@ import org.eclipse.swt.widgets.DateTime;
 import org.eclipse.ui.forms.widgets.FormToolkit;
 import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;
+import org.eclipse.swt.events.VerifyEvent;
+import org.eclipse.swt.events.VerifyListener;
 import org.eclipse.swt.widgets.TableColumn;
 
 public class AppAluno {
@@ -35,23 +37,12 @@ public class AppAluno {
 	private Text txbNomeResp;
 	private Table tbTurmCad;
 	private final FormToolkit formToolkit = new FormToolkit(Display.getDefault());
+	private Table table;
 
-	/**
-	 * Launch the application.
-	 * @param args
-	 */
-	public static void main(String[] args) {
-		
-		try {
-			AppAluno window = new AppAluno();
-			window.open();
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
-	}
 
 	/**
 	 * Open the window.
+	 * @wbp.parser.entryPoint
 	 */
 	public void open() {
 		Display display = Display.getDefault();
@@ -83,6 +74,8 @@ public class AppAluno {
 		label.setBounds(10, 10, 68, 20);
 		
 		txbCodigo = new Text(shlAluno, SWT.BORDER);
+		txbCodigo.setEnabled(false);
+		txbCodigo.setEditable(false);
 		txbCodigo.setBounds(10, 38, 153, 30);
 		
 		Label lblNome = new Label(shlAluno, SWT.NONE);
@@ -91,6 +84,14 @@ public class AppAluno {
 		
 		txbNome = new Text(shlAluno, SWT.BORDER);
 		txbNome.setBounds(10, 100, 340, 30);
+		txbNome.addVerifyListener(new VerifyListener() {
+			
+			@Override
+			public void verifyText(VerifyEvent arg0) {
+				arg0.text = arg0.text.toUpperCase();
+				
+			}
+		});
 		
 		Label lblEmail = new Label(shlAluno, SWT.NONE);
 		lblEmail.setText("E-mail");
@@ -98,6 +99,14 @@ public class AppAluno {
 		
 		txbEmail = new Text(shlAluno, SWT.BORDER);
 		txbEmail.setBounds(10, 159, 340, 30);
+		txbEmail.addVerifyListener(new VerifyListener() {
+			
+			@Override
+			public void verifyText(VerifyEvent arg0) {
+				arg0.text = arg0.text.toUpperCase();
+				
+			}
+		});
 		
 		Label lblRG = new Label(shlAluno, SWT.NONE);
 		lblRG.setText("RG");
@@ -126,6 +135,14 @@ public class AppAluno {
 		
 		txbEndereco = new Text(shlAluno, SWT.BORDER);
 		txbEndereco.setBounds(10, 410, 257, 30);
+		txbEndereco.addVerifyListener(new VerifyListener() {
+			
+			@Override
+			public void verifyText(VerifyEvent arg0) {
+				arg0.text = arg0.text.toUpperCase();
+				
+			}
+		});
 		
 		Label label_7 = new Label(shlAluno, SWT.NONE);
 		label_7.setText("Bairro");
@@ -133,6 +150,14 @@ public class AppAluno {
 		
 		txbBairro = new Text(shlAluno, SWT.BORDER);
 		txbBairro.setBounds(10, 472, 133, 30);
+		txbBairro.addVerifyListener(new VerifyListener() {
+			
+			@Override
+			public void verifyText(VerifyEvent arg0) {
+				arg0.text = arg0.text.toUpperCase();
+				
+			}
+		});
 		
 		Label label_8 = new Label(shlAluno, SWT.NONE);
 		label_8.setText("Cidade");
@@ -140,6 +165,14 @@ public class AppAluno {
 		
 		txbCidade = new Text(shlAluno, SWT.BORDER);
 		txbCidade.setBounds(152, 472, 137, 30);
+		txbCidade.addVerifyListener(new VerifyListener() {
+			
+			@Override
+			public void verifyText(VerifyEvent arg0) {
+				arg0.text = arg0.text.toUpperCase();
+				
+			}
+		});
 		
 		Label label_9 = new Label(shlAluno, SWT.NONE);
 		label_9.setText("Numero");
@@ -150,6 +183,14 @@ public class AppAluno {
 		
 		txbEstado = new Text(shlAluno, SWT.BORDER);
 		txbEstado.setBounds(295, 472, 55, 30);
+		txbEstado.addVerifyListener(new VerifyListener() {
+			
+			@Override
+			public void verifyText(VerifyEvent arg0) {
+				arg0.text = arg0.text.toUpperCase();
+				
+			}
+		});
 		
 		Label label_10 = new Label(shlAluno, SWT.NONE);
 		label_10.setText("Estado");
@@ -157,13 +198,15 @@ public class AppAluno {
 		
 		Group group = new Group(shlAluno, SWT.NONE);
 		group.setText("Sistema");
-		group.setBounds(372, 74, 185, 177);
+		group.setBounds(374, 10, 185, 177);
 		
 		Label label_11 = new Label(group, SWT.NONE);
 		label_11.setText("Login");
 		label_11.setBounds(10, 10, 68, 20);
 		
 		txbLogin = new Text(group, SWT.BORDER);
+		txbLogin.setEnabled(false);
+		txbLogin.setEditable(false);
 		txbLogin.setBounds(10, 36, 153, 30);
 		
 		Label label_12 = new Label(group, SWT.NONE);
@@ -173,27 +216,55 @@ public class AppAluno {
 		txbSenha = new Text(group, SWT.BORDER);
 		txbSenha.setBounds(10, 98, 153, 30);
 		
-		Group group_1 = new Group(shlAluno, SWT.NONE);
-		group_1.setText("Sistema");
-		group_1.setBounds(372, 257, 331, 177);
+		Group grpResponsavl = new Group(shlAluno, SWT.NONE);
+		grpResponsavl.setText("Responsavél");
+		grpResponsavl.setBounds(372, 208, 331, 320);
 		
-		Label label_13 = new Label(group_1, SWT.NONE);
+		Label label_13 = new Label(grpResponsavl, SWT.NONE);
 		label_13.setText("Cód. Resp");
 		label_13.setBounds(10, 10, 68, 20);
 		
-		txbCodResp = new Text(group_1, SWT.BORDER);
+		txbCodResp = new Text(grpResponsavl, SWT.BORDER);
 		txbCodResp.setBounds(10, 36, 153, 30);
 		
-		Label label_14 = new Label(group_1, SWT.NONE);
+		Label label_14 = new Label(grpResponsavl, SWT.NONE);
 		label_14.setText("Nome");
 		label_14.setBounds(10, 72, 68, 20);
 		
-		txbNomeResp = new Text(group_1, SWT.BORDER);
+		txbNomeResp = new Text(grpResponsavl, SWT.BORDER);
 		txbNomeResp.setBounds(10, 98, 312, 30);
 		
-		Button button = new Button(group_1, SWT.NONE);
+		Button button = new Button(grpResponsavl, SWT.NONE);
 		button.setText("Buscar Resp.");
-		button.setBounds(169, 36, 153, 34);
+		button.setBounds(169, 36, 101, 34);
+		
+		table = new Table(grpResponsavl, SWT.BORDER | SWT.FULL_SELECTION);
+		table.setBounds(10, 134, 312, 154);
+		formToolkit.adapt(table);
+		formToolkit.paintBordersFor(table);
+		table.setHeaderVisible(true);
+		table.setLinesVisible(true);
+		
+		TableColumn tblclmnCodResp = new TableColumn(table, SWT.NONE);
+		tblclmnCodResp.setWidth(100);
+		tblclmnCodResp.setText("Cod Resp");
+		
+		TableColumn tblclmnNomeResp = new TableColumn(table, SWT.NONE);
+		tblclmnNomeResp.setResizable(false);
+		tblclmnNomeResp.setWidth(100);
+		tblclmnNomeResp.setText("Nome Resp");
+		
+		Button btnAddResponsavel = new Button(grpResponsavl, SWT.NONE);
+		btnAddResponsavel.addSelectionListener(new SelectionAdapter() {
+			@Override
+			public void widgetSelected(SelectionEvent e) {
+				AppResponsavel tela = new AppResponsavel();
+				tela.open();
+			}
+		});
+		btnAddResponsavel.setText("+");
+		btnAddResponsavel.setBounds(276, 36, 43, 34);
+		formToolkit.adapt(btnAddResponsavel, true, true);
 		
 		Label label_15 = new Label(shlAluno, SWT.NONE);
 		label_15.setText("Data de Nascimento");

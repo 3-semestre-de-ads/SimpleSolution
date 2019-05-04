@@ -1,5 +1,11 @@
 package view;
 
+import java.io.InputStream;
+
+import javax.swing.ImageIcon;
+import javax.swing.JFrame;
+import javax.swing.JLabel;
+
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Menu;
@@ -9,6 +15,7 @@ import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.custom.StackLayout;
 import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;
+import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.layout.FormLayout;
 import org.eclipse.swt.layout.FormData;
 import org.eclipse.swt.layout.FormAttachment;
@@ -16,36 +23,28 @@ import org.eclipse.swt.layout.FillLayout;
 import org.eclipse.swt.widgets.Canvas;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Label;
+import org.eclipse.wb.swt.SWTResourceManager;
+
+import view.admin.AppAluno;
+
+import org.eclipse.swt.layout.GridData;
 
 public class MenuAdministrador {
 
 	protected Shell shell;
 
 	/**
-	 * Launch the application.
-	 * @param args
-	 */
-	public static void main(String[] args) {
-		try {
-			MenuAdministrador window = new MenuAdministrador();
-			window.open();
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
-	}
-
-	/**
 	 * Open the window.
+	 * @wbp.parser.entryPoint
 	 */
 	public void open() {
 		Display display = Display.getDefault();
 		createContents();
 		shell.open();
 		shell.layout();
-		shell.setLayout(new GridLayout(1, false));
+		shell.setLayout(new FillLayout());
 		Menu menu = new Menu(shell, SWT.BAR);
-		shell.setMenuBar(menu);			
-		
+		shell.setMenuBar(menu);
 		/*
 		 * @Criando Menu Arquivo
 		 */
@@ -58,7 +57,7 @@ public class MenuAdministrador {
 		 * Criação de Submenus Arquivo
 		 */
 		MenuItem itemSair = new MenuItem(menuArquivo, SWT.NONE);
-		itemSair.setText("Sair");
+		itemSair.setText("Logoff");
 		itemSair.addSelectionListener(new SelectionAdapter() {
 		      public void widgetSelected(SelectionEvent e) {
 		          shell.close();
@@ -94,58 +93,100 @@ public class MenuAdministrador {
 		          AppAluno tela = new AppAluno();
 		          tela.open();
 		        }
-		      });
-		
-		MenuItem itemDelAluno = new MenuItem(menuAluno, SWT.NONE);
-		itemDelAluno.setText("Inativar Aluno");
-		itemDelAluno.addSelectionListener(new SelectionAdapter() {
-		      public void widgetSelected(SelectionEvent e) {
-		          AppAluno tela = new AppAluno();
-		          tela.open();
-		        }
-		      });
+		      });		
 		
 		/*
-		 * @Criando Menu Aulas
+		 * Criando Menu Aulas
 		 */
 		MenuItem itemAulas = new MenuItem(menu, SWT.CASCADE);
 		itemAulas.setText("Aulas");		
 		Menu menuAulas= new Menu(itemAulas);
 		itemAulas.setMenu(menuAulas);
+			/*
+			 * MenuIdiomas
+			 */
+			MenuItem itemIdioma = new MenuItem(menuAulas, SWT.CASCADE);
+			itemIdioma.setText("Idioma");
+			Menu menuIdiomas = new Menu(itemIdioma);	
+			itemIdioma.setMenu(menuIdiomas);				
+				MenuItem cadIdioma = new MenuItem(menuIdiomas, SWT.PUSH);
+				cadIdioma.setText("Cadastrar");			
+				MenuItem conIdioma = new MenuItem(menuIdiomas, SWT.PUSH);
+				conIdioma.setText("Consultar");
+			/*
+			 * MenuIdiomas
+			 */
+			MenuItem itemTurma = new MenuItem(menuAulas, SWT.CASCADE);
+			itemTurma.setText("Turmas");
+			Menu menuTurma = new Menu(itemTurma);	
+			itemTurma.setMenu(menuTurma);
+				MenuItem cadTurma = new MenuItem(menuTurma, SWT.PUSH);
+				cadTurma.setText("Cadastrar");		
+				MenuItem conTurma = new MenuItem(menuTurma, SWT.PUSH);
+				conTurma.setText("Consultar");
+				
+			/*
+			 * Menu Tipo de Ensino
+			 */
+			MenuItem itemTipoEnsino = new MenuItem(menuAulas, SWT.CASCADE);
+			itemTipoEnsino.setText("Tipos de Ensino");
+			Menu menuTe = new Menu(itemTipoEnsino);	
+			itemTipoEnsino.setMenu(menuTe);
+				MenuItem cadTipoEnsino = new MenuItem(menuTe, SWT.PUSH);
+				cadTipoEnsino.setText("Cadastrar");
+				MenuItem conTipoEnsino = new MenuItem(menuTe, SWT.PUSH);
+				conTipoEnsino.setText("Consultar");
 		
-		/*
-		 * Criação de Submenus Aulas
-		 */
 
-		MenuItem itemCadIdioma = new MenuItem(menuAulas, SWT.NONE);
-		itemCadIdioma.setText("Cadastrar / Consultar Idiomas");
-		itemCadIdioma.addSelectionListener(new SelectionAdapter() {
-		      public void widgetSelected(SelectionEvent e) {
-		          AppIdioma tela = new AppIdioma();
-		          tela.open();
-		        }
-		      });
-		MenuItem itemCadTurma = new MenuItem(menuAulas, SWT.NONE);
-		itemCadTurma.setText("Cadastrar / Consultar Turmas");
-		
-		
 		/*
-		 * @Criando Menu Funcionários
+		 * Menu Funcionários
 		 */
 		MenuItem itemFuncionarios = new MenuItem(menu, SWT.CASCADE);
 		itemFuncionarios.setText("Funcionários");		
 		Menu menuFuncionarios= new Menu(itemFuncionarios);
-		itemFuncionarios.setMenu(menuFuncionarios);
+		itemFuncionarios.setMenu(menuFuncionarios);	
+			
+			/*
+			 * Sub Menu Professor
+			 */
+			MenuItem itemProfessor = new MenuItem(menuFuncionarios, SWT.CASCADE);
+			itemProfessor.setText("Professor");
+			Menu menuProfessor = new Menu(itemProfessor);	
+			itemProfessor.setMenu(menuProfessor);
+				MenuItem cadProfessor = new MenuItem(menuProfessor, SWT.PUSH);
+				cadProfessor.setText("Cadastrar");
+				MenuItem conProfessor = new MenuItem(menuProfessor, SWT.PUSH);
+				conProfessor.setText("Consultar");
+			
+			/*
+			 * Sub Menu Administrador
+			 */
+			MenuItem itemAdm = new MenuItem(menuFuncionarios, SWT.CASCADE);
+			itemAdm.setText("Adminstrador");
+			Menu menuAdm = new Menu(itemAdm);
+			itemAdm.setMenu(menuAdm);
+				MenuItem cadAdm = new MenuItem(menuAdm, SWT.PUSH);
+				cadAdm.setText("Cadastrar");
+				MenuItem conAdm = new MenuItem(menuAdm, SWT.PUSH);
+				conAdm.setText("Consultar");
 		
 		/*
-		 * Criação de Submenus Funcionários
+		 * @Criando Menu Financeiro
 		 */
-
-		MenuItem itemProfessor = new MenuItem(menuFuncionarios, SWT.NONE);
-		itemProfessor.setText("Cadastrar / Consultar Professor");
-		MenuItem itemAdm = new MenuItem(menuFuncionarios, SWT.NONE);
-		itemAdm.setText("Cadastrar / Consultar Adminstrador");
+		MenuItem itemFinanceiro = new MenuItem(menu, SWT.CASCADE);
+		itemFinanceiro.setText("Financeiro");		
+		Menu menuFinanceiro= new Menu(itemFinanceiro);
+		itemFinanceiro.setMenu(menuFinanceiro);
 		
+		
+		/*
+		 * Criação de Submenus Financeiro
+		 */
+		MenuItem itemResumoMensalidades = new MenuItem(menuFinanceiro, SWT.NONE);
+		itemResumoMensalidades.setText("Mensalidades");
+		
+	    
+
 		while (!shell.isDisposed()) {
 			if (!display.readAndDispatch()) {
 				display.sleep();
@@ -158,8 +199,10 @@ public class MenuAdministrador {
 	 */
 	protected void createContents() {
 		shell = new Shell();
+		
 		shell.setSize(800, 600);
 		shell.setText("SimpleSolution - Administrador");
+
 
 	}
 }

@@ -1,4 +1,4 @@
-package view;
+package view.admin;
 
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Shell;
@@ -75,6 +75,8 @@ public class AppIdioma {
 		lblNewLabel.setText("Codigo");
 		
 		txbCodigo = new Text(shlIdioma, SWT.BORDER);
+		txbCodigo.setEnabled(false);
+		txbCodigo.setEditable(false);
 		txbCodigo.setBounds(10, 36, 103, 30);
 		
 		txbIdioma = new Text(shlIdioma, SWT.BORDER);
