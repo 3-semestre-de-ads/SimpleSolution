@@ -1,12 +1,16 @@
 package view;
 
 import org.eclipse.swt.widgets.Display;
+
+
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.swt.widgets.Text;
 
 import java.awt.Menu;
+import java.sql.ResultSet;
 
 import javax.swing.JFrame;
+import javax.swing.JOptionPane;
 
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.widgets.Label;
@@ -15,6 +19,8 @@ import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.events.VerifyEvent;
 import org.eclipse.swt.events.VerifyListener;
+
+import model.*;
 
 public class LoginPage {
 	private static Text txbUsuario;
@@ -31,11 +37,11 @@ public class LoginPage {
 		txbUsuario = new Text(shlLoginpage, SWT.BORDER);
 		txbUsuario.setBounds(10, 41, 293, 30);
 		txbUsuario.addVerifyListener(new VerifyListener() {
-			
+
 			@Override
 			public void verifyText(VerifyEvent arg0) {
 				arg0.text = arg0.text.toUpperCase();
-				
+
 			}
 		});
 
@@ -53,11 +59,19 @@ public class LoginPage {
 		Button btnLogin = new Button(shlLoginpage, SWT.NONE);
 		btnLogin.addSelectionListener(new SelectionAdapter() {
 			@Override
-			public void widgetSelected(SelectionEvent e) {
-				if (txbUsuario.getText().contains("ADM")) {
-					shlLoginpage.close();
-					MenuAdministrador tela = new MenuAdministrador();
-					tela.open();
+			public void widgetSelected(SelectionEvent e) {				
+				if (txbUsuario.getText().trim() != "" || txbSenha.getText().trim() != "") {
+					if (txbUsuario.getText().contains("ADM")) {
+						ConsultaDb cdb = new ConsultaDb();
+						boolean consulta = cdb.consultaLoginAdm(txbUsuario.getText().trim(), txbSenha.getText().trim());						
+						if (consulta) {
+							shlLoginpage.close();
+							MenuAdministrador tela = new MenuAdministrador();
+							tela.open();
+						}else {
+							JOptionPane.showMessageDialog(null, "Usuário ou senha inválidos!");
+						}
+					}	
 				}else if (txbUsuario.getText().contains("PRF")) {
 					shlLoginpage.close();
 					MenuProfessor tela = new MenuProfessor();

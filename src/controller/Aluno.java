@@ -1,12 +1,15 @@
 package controller;
 
 import java.sql.Date;
+
+import model.ConsultaDb;
 /**
- * Classe aluno constitui se na criação do cadastro dos alunos
+ * Classe aluno constitui se na criaï¿½ï¿½o do cadastro dos alunos
  * e seus respectivos atributos
- * @author Andressa, Ede, Leonardo, Natália.
+ * @author Andressa, Ede, Leonardo, Natï¿½lia.
  */
 public class Aluno {
+
 	private int codAluno;
 	private String nomeAluno;
 	private Date nascAluno;
