@@ -11,8 +11,25 @@ public class ConsultaDb {
 	private String sqlString = "";
 
 
-	public ResultSet consultaTodosResponsaveis(Responsavel resp) {
-		sqlString = "SELECT * FROM RESPONSAVEL;";
+	public ResultSet consultaTodos(String tabela) {
+		sqlString = "SELECT * FROM"+tabela+";";
+		DbConn dbc = new DbConn();		
+		if (dbc.getConnection()) {
+			try {
+				dbc.st = dbc.con.prepareStatement(sqlString);
+				dbc.rs = dbc.st.executeQuery();
+				return dbc.rs;
+			} catch (SQLException e) {
+				return null;
+			}
+
+		}else {
+			return null;
+		}
+	}
+	
+	public ResultSet consultaPorId(String tabela, String campo, String codigo) {
+		sqlString = "SELECT * FROM " + tabela + "WHERE "+campo+"='"+codigo+"';";
 		DbConn dbc = new DbConn();		
 		if (dbc.getConnection()) {
 			try {
