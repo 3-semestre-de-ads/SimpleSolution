@@ -1,47 +1,123 @@
 package model;
+
+import java.sql.ResultSet;
+
+import javax.swing.JOptionPane;
+
+import services.DbConn;
+
 /**
- * A classe "Idioma" permite o cadastro dos idiomas
- * e seus respectivos atributos.
- * @author Andressa, Ede, Leonardo, Natï¿½lia.
+ * Essa classe é responsável por receber e estabelecer os atributos referentes a Idioma
+ * @author Simple Solution Devs
  */
 public class Idioma {
+	
+	/**
+	 * Atributos da classe (colunas da tabela IDIOMA)
+	 */
 	private int codIdioma;
 	private String nomeIdioma;
 	private String nivelIdioma;
+	
+	
+	
 	/**
+	 * Método construtor 1
+	 */
+	public Idioma() {
+	}
+
+
+
+	//????
+	/**
+	 * Método construtor 2
+	 * @param codigo - valor do atributo codIdioma
+	 */
+	public Idioma(String codigo) {
+		DbConn cdb = new DbConn();
+		ResultSet rs = cdb.consultaRegistro("SELECT * FROM IDIOMA WHERE codIdioma="+codigo+";");
+		try {
+			while (rs.next()) {
+				setCodIdioma(Integer.parseInt(rs.getString(1).toString()));
+				setNomeIdioma(rs.getString(2).toString());
+				setNivelIdioma(rs.getString(4).toString());		
+			}
+		} 
+		catch (Exception e) {
+			// TODO: handle exception
+		}
+	}
+
+	
+	
+	
+	/**
+	 * Método responsável por retornar o valor do codIdioma
 	 * @return o codIdioma
 	 */
-	private int getCodIdioma() {
+	public int getCodIdioma() {
 		return codIdioma;
 	}
 	/**
-	 * @param codIdioma o codIdioma para set
+	 * Método responsável por estabelecer o valor de codIdioma e validar o mesmo
+	 * @param codIdioma - valor do atributo
 	 */
-	private void setCodIdioma(int codIdioma) {
-		this.codIdioma = codIdioma;
+	public void setCodIdioma(int codIdioma) {
+		try {
+			if(codIdioma == 0) {
+				JOptionPane.showMessageDialog(null, "O dado inserido deve ser maior que 0", "Código Idioma", 1);
+			}
+			else {
+				this.codIdioma = codIdioma;
+			}
+		}
+		catch(NumberFormatException e) {
+			JOptionPane.showMessageDialog(null, "O dado inserido deve ser um número", "Código Idioma", 1);
+		}
 	}
+	
+	
+	
 	/**
-	 * @return o nomeIdioma
+	 * Método responsável por retornar o valor do nomeIdioma
+	 * @return o nomeIdioma - valor do atributo
 	 */
-	private String getNomeIdioma() {
+	public String getNomeIdioma() {
 		return nomeIdioma;
 	}
 	/**
-	 * @param nomeIdioma o nomeIdioma para set
+	 * Método responsável por estabelecer o valor de nomeIdioma e validar o mesmo
+	 * @param nomeIdioma - valor do atributo
 	 */
-	private void setNomeIdioma(String nomeIdioma) {
-		this.nomeIdioma = nomeIdioma;
+	public void setNomeIdioma(String nomeIdioma) {
+		if(nomeIdioma.length() < 10 || nomeIdioma == null || nomeIdioma == "") {
+			JOptionPane.showMessageDialog(null, "Tamanho acima do esperado ou campo nulo", "Nome Idioma", 1);
+		}
+		else {
+			this.nomeIdioma = nomeIdioma;
+		}
 	}
+	
+	
+	
 	/**
-	 * @return o nivelIdioma
+	 * Método responsável por retornar o valor do nivelIdioma
+	 * @return o nivelIdioma - valor do atributo
 	 */
-	private String getNivelIdioma() {
+	public String getNivelIdioma() {
 		return nivelIdioma;
 	}
 	/**
-	 * @param nivelIdioma o nivelIdioma para set
+	 * Método responsável por estabelecer o valor de nivelIdioma e validar o mesmo
+	 * @param nivelIdioma - valor do atributo
 	 */
-	private void setNivelIdioma(String nivelIdioma) {
-		this.nivelIdioma = nivelIdioma;
+	public void setNivelIdioma(String nivelIdioma) {
+		if(nivelIdioma.length() < 10 || nivelIdioma == null || nivelIdioma == "") {
+			JOptionPane.showMessageDialog(null, "Tamanho acima do esperado ou campo nulo", "Nível Idioma", 1);
+		}
+		else {
+			this.nivelIdioma = nivelIdioma;
+		}
 	}
 }

@@ -2,74 +2,146 @@ package model;
 
 import java.sql.ResultSet;
 
+import javax.swing.JOptionPane;
+
 import services.DbConn;
 
 /**
- * A classe "Avaliacao" constitui-se na criaï¿½ï¿½o do
- *  cadastro de avaliaï¿½ï¿½es e seus respectivos atributos.
- * @author Andressa, Ede, Leonardo, Natï¿½lia.
+ * Essa classe é responsável por receber e estabelecer os atributos referentes a Avaliação
+ * @author Simple Solution Devs
  */
 public class Avaliacao {
-	private int codAvaliacao;
-	private String nomeAvaliacao;
-	private double valorAvaliacao;
+
+	/**
+	 * Atributos da classe (colunas da tabela AVALIACAO)
+	 */
+	private int codAval;
+	private String nomeAval;
+	private double valorAval;
 	private int codAdmin;
 
-	public Avaliacao(String codigo) {
+
+
+	/**
+	 * Método construtor 1
+	 */
+	public Avaliacao() {
+	}
+
+
+
+	/**
+	 * Método construtor 2
+	 * @param codigo - valor do atributo codAval
+	 */
+	public Avaliacao (String codigo) {
 		DbConn cdb = new DbConn();
 		ResultSet rs = cdb.consultaRegistro("SELECT * FROM AVALIACAO WHERE codAval="+codigo+";");
 		try {
-			setCodAvaliacao(Integer.parseInt(rs.getString(1).toString()));
-			setNomeAvaliacao(rs.getString(2).toString());
-			setValorAvaliacao(Double.parseDouble(rs.getString(3).toString()));
+			setCodAval(Integer.parseInt(rs.getString(1).toString()));
+			setNomeAval(rs.getString(2).toString());
+			setValorAval(Double.parseDouble(rs.getString(3).toString()));
 			setCodAdmin(Integer.parseInt(rs.getString(4).toString()));
-
 		}
 		catch (Exception e) {
-
 		}
 	}
+
+
+
 	/**
-	 * @return o codAvaliacao
+	 * Método responsável por retornar o valor do codAval
+	 * @return codAval - valor do atributo
 	 */
-	private int getCodAvaliacao() {
-		return codAvaliacao;
+	public int getCodAval() {
+		return codAval;
 	}
 	/**
-	 * @param codAvaliacao o codAvaliacao para set
+	 * Método responsável por estabelecer o valor de codAval e validar o mesmo
+	 * @param codAval - valor do atributo
 	 */
-	private void setCodAvaliacao(int codAvaliacao) {
-		this.codAvaliacao = codAvaliacao;
+	public void setCodAval(int codAval) {
+		try {
+			this.codAval = codAval;
+		}
+		catch(NumberFormatException e) {
+			JOptionPane.showMessageDialog(null, "O dado inserido deve ser um número", "Código Avaliação", 1);
+		}
+	}
+
+
+
+	/**
+	 * Método responsável por retornar o valor do nomeAval
+	 * @return nomeAval - valor do atributo
+	 */
+	public String getNomeAval() {
+		return nomeAval;
 	}
 	/**
-	 * @return o nomeAvaliacao
+	 * Método responsável por estabelecer o valor de nomeAval e validar o mesmo
+	 * @param nomeAval - valor do atributo
 	 */
-	private String getNomeAvaliacao() {
-		return nomeAvaliacao;
+	public void setNomeAval(String nomeAval) {
+		if(nomeAval.length() < 10 || nomeAval == null || nomeAval == "") {
+			JOptionPane.showMessageDialog(null, "Tamanho acima do esperado ou campo nulo", "Nome Avaliação", 1);
+		}
+		else {
+			this.nomeAval = nomeAval;
+		}
+	}
+
+
+
+	/**
+	 * Método responsável por retornar o valor do valorAval
+	 * @return valorAval - valor do atributo
+	 */
+	public double getValorAval() {
+		return valorAval;
 	}
 	/**
-	 * @param nomeAvaliacao o nomeAvaliacao para set
+	 * Método responsável por estabelecer o valor de valorAval e validar o mesmo
+	 * @param valorAval
 	 */
-	private void setNomeAvaliacao(String nomeAvaliacao) {
-		this.nomeAvaliacao = nomeAvaliacao;
+	public void setValorAval(double valorAval) {
+		try {
+			this.valorAval = valorAval;
+		}
+		catch(NumberFormatException e) {
+			JOptionPane.showMessageDialog(null, "O dado inserido deve ser um número", "Nota Avaliação", 1);
+		}
 	}
+
+
+
+	//SELECT PARA VALIDAR codAdmin
 	/**
-	 * @return o valorAvaliacao
+	 * Método responsável por retornar o valor do codAdmin
+	 * @return codAdmin - valor do atributo
 	 */
-	private double getValorAvaliacao() {
-		return valorAvaliacao;
-	}
-	/**
-	 * @param valorAvaliacao o valorAvaliacao para set
-	 */
-	private void setValorAvaliacao(double valorAvaliacao) {
-		this.valorAvaliacao = valorAvaliacao;
-	}
 	public int getCodAdmin() {
 		return codAdmin;
 	}
+	/**
+	 * Método responsável por estabelecer o valor de codAdmin e validar o mesmo
+	 * @param codAdmin - valor do atributo
+	 */
 	public void setCodAdmin(int codAdmin) {
-		this.codAdmin = codAdmin;
+		try {
+			if(codAdmin == 0) {
+				JOptionPane.showMessageDialog(null, "O dado inserido deve ser maior que 0", "Código Administrador", 1);
+			}
+			else {
+				this.codAdmin = codAdmin;
+			}
+		}
+		catch(NumberFormatException e) {
+			JOptionPane.showMessageDialog(null, "O dado inserido deve ser um número", "Código Administrador", 1);
+		}
 	}
-	
+
+
+
+
 }

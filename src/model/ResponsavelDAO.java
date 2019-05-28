@@ -1,21 +1,28 @@
 package model;
 
-import java.sql.Date;
-import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.text.SimpleDateFormat;
-import java.util.Iterator;
 
 import services.DbConn;
 
+/**
+ * Essa classe é responsável por acessar o banco de dados e atualizar a tabela ALUNO
+ * Comunicação com a classe Aluno
+ * @author Simple Solution Devs
+ */
 public class ResponsavelDAO {
+	
+	/**
+	 * Atributos para realizar conexão com o banco de dados
+	 */
 	private DbConn dbc = new DbConn();
 	private String men, sql;
 	
 	
+	
 	/**
-	 * FunÃ§Ã£o que retorna o proximo ID, usada na criaÃ§Ã£o de um novo objeto
-	 * @return int
+	 * Método responsável por retornar o próximo número do índice no banco de dados
+	 * Tabela RESPONSAVEL
+	 * @return r - valor do próximo índice
 	 */
 	public int proximoId() {
 		sql = "SELECT MAX('codResponsavel') FROM RESPONSAVEL;";
@@ -34,10 +41,11 @@ public class ResponsavelDAO {
 		return r;
 	}
 	
+	
+
 	/**
-	 * FunÃ§Ã£o para consultar objetos
-	 * @param none
-	 * @return Responsavel[]
+	 * Método responsável por retornar uma lista com o registro de todos os responsáveis
+	 * @return lista_responsaveis - lista de responsaveis (array)
 	 */
 	public Responsavel[] consultaTodos() {
 		sql = "SELECT * FROM RESPONSAVEL";
@@ -64,7 +72,7 @@ public class ResponsavelDAO {
 						responsavel.setRgResp(dbc.rs.getString(4));
 						responsavel.setCpfResp(dbc.rs.getString(5));
 						responsavel.setEmailResp(dbc.rs.getString(6));
-						responsavel.setTelefoneResp(dbc.rs.getString(7));
+						responsavel.setTelResp(dbc.rs.getString(7));
 						responsavel.setStatusResp(dbc.rs.getString(8));
 						count++;
 					}
@@ -78,10 +86,13 @@ public class ResponsavelDAO {
 		return lista_responsaveis;
 	}
 	
+	
+
 	/**
-	 * FunÃ§Ã£o para popular o objeto
-	 * @param responsavel
-	 * @return responsavel
+	 * Método responsável por retornar um registro de acordo com o código fornecido
+	 * Tabela RESPONSAVEL
+	 * @param responsavel - objeto instânciado da classe Aluno
+	 * @return responsavel 
 	 */
 	public Responsavel consulta(Responsavel responsavel) {
 		sql = "SELECT * FROM RESPONSAVEL WHERE codResp=?;";
@@ -96,7 +107,7 @@ public class ResponsavelDAO {
 					responsavel.setRgResp(dbc.rs.getString(4));
 					responsavel.setCpfResp(dbc.rs.getString(5));
 					responsavel.setEmailResp(dbc.rs.getString(6));
-					responsavel.setTelefoneResp(dbc.rs.getString(7));
+					responsavel.setTelResp(dbc.rs.getString(7));
 					responsavel.setStatusResp(dbc.rs.getString(8));
 				}			
 			} catch (SQLException e) {
@@ -108,10 +119,13 @@ public class ResponsavelDAO {
 		return responsavel;
 	}
 	
+	
+	
 	/**
-	 * FunÃ§Ã£o para ativar ou inativar o usuÃ£rio
-	 * @param responsavel
-	 * @return String
+	 * Método responsável por atualizar o status de algum registro
+	 * Tabela RESPONSAVEL
+	 * @param responsavel - objeto instânciado da classe Responsavel
+	 * @return men - mensagem de aviso
 	 */
 	public String ativaInativa(Responsavel responsavel) {
 		if(responsavel.getStatusResp()=="A") {
@@ -135,9 +149,13 @@ public class ResponsavelDAO {
 		return men;
 	}
 	
+	
+	
 	/**
-	 * Insere ou cria um novo responsavel.
-	 * @model.Responsavel
+	 * Método responsável por inserir um novo registro ou atualizar um registro existente
+	 * Tabela RESPONSAVEL
+	 * @param responsavel - objeto instânciado da classe Responsavel
+	 * @return men - mensagem de aviso
 	 */
 	public String insereAtualiza(Responsavel responsavel) {
 		sql = "INSERT INTO RESPONSAVEL VALUES(?,?,?,?,?,?,?,?);";
@@ -150,8 +168,8 @@ public class ResponsavelDAO {
 				dbc.st.setString(4, responsavel.getRgResp());
 				dbc.st.setString(5, responsavel.getCpfResp());
 				dbc.st.setString(6, responsavel.getEmailResp());
-				dbc.st.setString(7, responsavel.getTelefoneResp());
-				dbc.st.setString(8, responsavel.getStatusResp());
+				dbc.st.setString(7, responsavel.getTelResp());
+				dbc.st.setString(8, responsavel.getStatusResp()); 
 				dbc.rs = dbc.st.executeQuery();
 			} catch (SQLException e) {
 				sql = "UPDATE RESPONSAVEL SET nomeResp=?"
@@ -171,8 +189,8 @@ public class ResponsavelDAO {
 						dbc.st.setString(3, responsavel.getRgResp());
 						dbc.st.setString(4, responsavel.getCpfResp());
 						dbc.st.setString(5, responsavel.getEmailResp());
-						dbc.st.setString(6, responsavel.getTelefoneResp());
-						dbc.st.setString(7, responsavel.getStatusResp());
+						dbc.st.setString(6, responsavel.getTelResp());
+						dbc.st.setString(7, responsavel.getStatusResp()); 
 						
 						dbc.st.setInt(8, responsavel.getCodResp());
 						dbc.rs = dbc.st.executeQuery();
