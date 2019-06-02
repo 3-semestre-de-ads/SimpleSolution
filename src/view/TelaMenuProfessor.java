@@ -44,13 +44,7 @@ public class TelaMenuProfessor {
 			 */
 			MenuItem itemSair = new MenuItem(menuArquivo, SWT.NONE);
 			itemSair.setText("Logoff");
-			itemSair.addSelectionListener(new SelectionAdapter() {
-			      public void widgetSelected(SelectionEvent e) {
-			    	  shlSimplesolutionAluno.close();
-			          TelaLoginPage tela = new TelaLoginPage();
-			          tela.main(null);
-			        }
-			      });
+
 			
 		/*
 		 * Criando Aulas 
@@ -65,22 +59,10 @@ public class TelaMenuProfessor {
 			 */
 			MenuItem itemFrequencia = new MenuItem(menuAula, SWT.NONE);
 			itemFrequencia.setText("Frequencia");
-			itemFrequencia.addSelectionListener(new SelectionAdapter() {
-				@Override
-				public void widgetSelected(SelectionEvent e) {
-					TelaFrequencia tela = new TelaFrequencia();
-					tela.open();
-				}
-			});
+
 			MenuItem itemNota = new MenuItem(menuAula, SWT.NONE);
 			itemNota.setText("Nota");
-			itemNota.addSelectionListener(new SelectionAdapter() {
-				@Override
-				public void widgetSelected(SelectionEvent e) {
-					AppNotas tela = new AppNotas();
-					tela.open();
-				}
-			});
+
 			
 		
 		

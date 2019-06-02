@@ -47,13 +47,7 @@ public class TelaMenuAluno {
 			 */
 			MenuItem itemSair = new MenuItem(menuArquivo, SWT.NONE);
 			itemSair.setText("Logoff");
-			itemSair.addSelectionListener(new SelectionAdapter() {
-			      public void widgetSelected(SelectionEvent e) {
-			    	  shell.close();
-			          TelaLoginPage tela = new TelaLoginPage();
-			          tela.main(null);
-			        }
-			      });
+
 		
 		Label lblNewLabel = new Label(shell, SWT.NONE);
 		lblNewLabel.setText("Faltas");

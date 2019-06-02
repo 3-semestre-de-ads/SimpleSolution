@@ -58,13 +58,6 @@ public class TelaMenuAdministrador {
 		 */
 		MenuItem itemSair = new MenuItem(menuArquivo, SWT.NONE);
 		itemSair.setText("Logoff");
-		itemSair.addSelectionListener(new SelectionAdapter() {
-		      public void widgetSelected(SelectionEvent e) {
-		          shell.close();
-		          TelaLoginPage tela = new TelaLoginPage();
-		          tela.main(null);
-		        }
-		      });
 		
 		/*
 		 * @Criando Menu Aluno
@@ -79,22 +72,11 @@ public class TelaMenuAdministrador {
 		 */
 		MenuItem itemCadAluno = new MenuItem(menuAluno, SWT.NONE);
 		itemCadAluno.setText("Cadastrar Aluno");
-		itemCadAluno.addSelectionListener(new SelectionAdapter() {
-		      public void widgetSelected(SelectionEvent e) {
-		          TelaAluno tela = new TelaAluno();
-		          tela.open();
-		        }
-		      });
+
 		
 		MenuItem itemConAluno = new MenuItem(menuAluno, SWT.NONE);
 		itemConAluno.setText("Consultar / Alterar Aluno");
-		itemConAluno.addSelectionListener(new SelectionAdapter() {
-		      public void widgetSelected(SelectionEvent e) {
-		          TelaAluno tela = new TelaAluno();
-		          tela.open();
-		        }
-		      });		
-		
+
 		/*
 		 * Criando Menu Aulas
 		 */

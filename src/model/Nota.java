@@ -1,90 +1,193 @@
 package model;
 
 import java.sql.Date;
+import java.sql.ResultSet;
+import java.text.SimpleDateFormat;
+import java.time.format.DateTimeParseException;
+
+import javax.swing.JOptionPane;
+
+import services.DbConn;
 
 /**
- * A classe "Nota" constitui-se na criaï¿½ï¿½o do
- * cadastro de notas e seus atributos.
- * @author Andressa, Ede, Leonardo e Natï¿½lia.
+ * Essa classe é responsável por receber e estabelecer os atributos referentes a Nota
+ * @author Simple Solution Devs
  */
 public class Nota {
-private int codNota;
-private int codAluno;
-private int codProfessor;
-private int codAvalicao;
-private Date dataNota;
-private double valorNota;
-/**
- * @return o codNota
- */
-private int getCodNota() {
-	return codNota;
-}
-/**
- * @param codNota o codNota para set
- */
-private void setCodNota(int codNota) {
-	this.codNota = codNota;
-}
-/**
- * @return o codAluno
- */
-private int getCodAluno() {
-	return codAluno;
-}
-/**
- * @param codAluno o codAluno para set
- */
-private void setCodAluno(int codAluno) {
-	this.codAluno = codAluno;
-}
-/**
- * @return o codProfessor
- */
-private int getCodProfessor() {
-	return codProfessor;
-}
-/**
- * @param codProfessor o codProfessor para set
- */
-private void setCodProfessor(int codProfessor) {
-	this.codProfessor = codProfessor;
-}
-/**
- * @return o codAvalicao
- */
-private int getCodAvalicao() {
-	return codAvalicao;
-}
-/**
- * @param codAvalicao o codAvalicao para set
- */
-private void setCodAvalicao(int codAvalicao) {
-	this.codAvalicao = codAvalicao;
-}
-/**
- * @return o dataNota
- */
-private Date getDataNota() {
-	return dataNota;
-}
-/**
- * @param dataNota o dataNota para set
- */
-private void setDataNota(Date dataNota) {
-	this.dataNota = dataNota;
-}
-/**
- * @return o valorNota
- */
-private double getValorNota() {
-	return valorNota;
-}
-/**
- * @param valorNota o valorNota para set
- */
-private void setValorNota(double valorNota) {
-	this.valorNota = valorNota;
-}
+	
+	/**
+	 * Atributos da classe (colunas da tabela NOTA)
+	 */
+	private int codNota;
+	private Date dataNota;
+	private double valorNota;
+	private int codMat;
+	private int codAval;
+	
+	
+	
+	/**
+	 * Método construtor 1
+	 */
+	public Nota() {
+	}
 
+
+
+	//????
+	/**
+	 * Método construtor 2
+	 * @param codigo - valor do atributo codNota
+	 */
+	public Nota(String codigo) {
+		DbConn cdb = new DbConn();
+		ResultSet rs = cdb.consultaRegistro("SELECT * FROM NOTA WHERE codNota="+codigo+";");
+		try {
+			while (rs.next()) {
+				setCodNota(Integer.parseInt(rs.getString(1).toString()));
+				SimpleDateFormat format = new SimpleDateFormat("dd/MM/yyyy");				
+				setDataNota((Date)format.parse(rs.getString(3).toString()));
+				setValorNota(Double.parseDouble(rs.getString(4).toString()));
+				setCodMat(Integer.parseInt(rs.getString(1).toString()));
+				setCodAval(Integer.parseInt(rs.getString(1).toString()));
+			}
+		} 
+		catch (Exception e) {
+			// TODO: handle exception
+		}
+	}
+	
+	
+	
+	/**
+	 * Método responsável por retornar o valor do codNota
+	 * @return codNota - valor do atributo
+	 */
+	public int getCodNota() {
+		return codNota;
+	}
+	/**
+	 * Método responsável por estabelecer o valor de codNota e validar o mesmo
+	 * @param codNota - valor do atributo
+	 */
+	public void setCodNota(int codNota) {
+		try {
+			if(codNota == 0) {
+				JOptionPane.showMessageDialog(null, "O dado inserido deve ser maior que 0", "Código Nota", 1);
+			}
+			else {
+				this.codNota = codNota;
+			}
+		}
+		catch(NumberFormatException e) {
+			JOptionPane.showMessageDialog(null, "O dado inserido deve ser um número", "Código Nota", 1);
+		}
+	}
+	
+	
+	
+	/**
+	 * Método responsável por retornar o valor do dataNota
+	 * @return dataNota - valor do atributo
+	 */
+	public Date getDataNota() {
+		return dataNota;
+	}
+	/**
+	 * Método responsável por estabelecer o valor de dataNota e validar o mesmo
+	 * @param dataNota - valor do atributo
+	 */
+	public void setDataNota(Date dataNota) {
+		try {
+			if(dataNota == null) {
+				JOptionPane.showMessageDialog(null, "Campo nulo", "Data Nota", 1);
+			}
+			else {
+				this.dataNota = dataNota;
+			}
+		}
+		catch(DateTimeParseException e) {
+			JOptionPane.showMessageDialog(null, e, "Data Nota", 1);
+		}
+	}
+	
+	
+	
+	//Verificação e select de acordo com o valor definido no codAval
+	/**
+	 * Método responsável por retornar o valor do valorNota
+	 * @return valorNota - valor do atributo
+	 */
+	public double getValorNota() {
+		return valorNota;
+	}
+	/**
+	 * Método responsável por estabelecer o valor de valorNota e validar o mesmo
+	 * @param valorNota - valor do atributo
+	 */
+	public void setValorNota(double valorNota) {
+		try {
+			this.valorNota = valorNota;
+		}
+		catch(NumberFormatException e) {
+			JOptionPane.showMessageDialog(null, "O dado inserido deve ser um número", "Valor Nota", 1);
+		}
+	}
+	
+	
+	
+	//SELECT PARA VALIDAR codMat
+	/**
+	 * Método responsável por retornar o valor do codMat
+	 * @return codMat - valor do atributo
+	 */
+	public int getCodMat() {
+		return codMat;
+	}
+	/**
+	 * Método responsável por estabelecer o valor de codMat e validar o mesmo
+	 * @param codMat - valor do atributo
+	 */
+	public void setCodMat(int codMat) {
+		try {
+			if(codMat == 0) {
+				JOptionPane.showMessageDialog(null, "O dado inserido deve ser maior que 0", "Código Matrícula", 1);
+			}
+			else {
+				this.codMat = codMat;
+			}
+		}
+		catch(NumberFormatException e) {
+			JOptionPane.showMessageDialog(null, "O dado inserido deve ser um número", "Código Matrícula", 1);
+		}
+	}
+	
+	
+	
+	//SELECT PARA VALIDAR codAval
+	/**
+	 * Método responsável por retornar o valor do codAval
+	 * @return codAval - valor do atributo
+	 */
+	public int getCodAval() {
+		return codAval;
+	}
+	/**
+	 * Método responsável por estabelecer o valor de cpfAluno e validar o mesmo
+	 * @param cpfAluno - valor do atributo
+	 */
+	public void setCodAval(int codAval) {
+		try {
+			if(codAval == 0) {
+				JOptionPane.showMessageDialog(null, "O dado inserido deve ser maior que 0", "Código Avaliação", 1);
+			}
+			else {
+				this.codAval = codAval;
+			}
+		}
+		catch(NumberFormatException e) {
+			JOptionPane.showMessageDialog(null, "O dado inserido deve ser um número", "Código Avaliação", 1);
+		}
+	}
+	
 }

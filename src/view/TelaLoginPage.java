@@ -15,11 +15,8 @@ import org.eclipse.swt.events.SelectionEvent;
 public class TelaLoginPage {
 	public Text txbSenha;
 	public Text txbUsuario;
-	
-	public static void main(String[] args) {
-		TelaLoginPage tela = new TelaLoginPage();
-		tela.open();
-	}
+	public Button btnLogar;
+
 
 	/**
 	 * Open the window.
@@ -31,17 +28,10 @@ public class TelaLoginPage {
 		shlLoginPage.setSize(318, 240);
 		shlLoginPage.setText("Login Page");
 		
-		Button btnLogar = new Button(shlLoginPage, SWT.NONE);
-		btnLogar.addSelectionListener(new SelectionAdapter() {
-			@Override
-			public void widgetSelected(SelectionEvent e) {
-				AppLoginPage control = new AppLoginPage();
-				control.validaLogin(txbUsuario.getText().trim(), txbSenha.getText().trim());
-			}
-		});
+		btnLogar = new Button(shlLoginPage, SWT.NONE);
 		btnLogar.setText("Logar");
 		btnLogar.setBounds(10, 145, 293, 34);
-		
+			
 		txbSenha = new Text(shlLoginPage, SWT.BORDER);
 		txbSenha.setBounds(10, 98, 293, 30);
 		

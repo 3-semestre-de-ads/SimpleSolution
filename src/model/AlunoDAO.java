@@ -2,89 +2,269 @@ package model;
 
 import java.sql.SQLException;
 
+import javax.swing.JOptionPane;
+
 import services.DbConn;
 
+/**
+ * Essa classe é responsável por acessar o banco de dados e atualizar a tabela ALUNO
+ * Comunicação com a classe Aluno
+ * @author Simple Solution Devs
+ */
 public class AlunoDAO {
+
+	/**
+	 * Atributos para realizar conexão com o banco de dados
+	 */
 	private DbConn dbc = new DbConn();
 	private String men, sql;
 
-	public Aluno[] consultaTodos() {
+
+	
+	/**
+	 * Validar os atributos userAluno e senhaAluno para o usuário poder efetuar o login
+	 * Tabela ALUNO
+	 * @param user - valor recebido para o atributo userAluno
+	 * @param senha - valor recebido para o atributo senhaAluno
+	 * @return valor boolean - TRUE (select retornado com sucesso) ou FALSE (select sem retorno ou cadastro inativo)
+	 */
+	public boolean efetuarLogin(String user, String senha) {
+		sql = "SELECT statusAluno FROM ALUNO WHERE userAluno=? AND senhaAluno=?";
+		if (dbc.getConnection()) {
+			try {
+				dbc.st = dbc.con.prepareStatement(sql);
+				dbc.st.setString(1, user.trim());
+				dbc.st.setString(2, senha.trim());
+				dbc.rs = dbc.st.executeQuery();
+				String res = dbc.rs.toString();
+				if(res == "A") { 
+					return true;
+				}
+				else {
+					JOptionPane.showMessageDialog(null,"Usuário inativo", "Login Aluno", 1);
+					return false; 
+				}
+			}
+			catch (SQLException e) {
+				JOptionPane.showMessageDialog(null,e, "Falha", 1);
+				return false;
+			}
+			finally {
+				dbc.close();
+			}
+		}
+		return false;
+	}
+	
+	
+
+	/**
+	 * Método responsável por retornar uma lista com o registro de todos os alunos
+	 * @return listaAluno - lista de alunos (array)
+	 */
+	public Aluno[] consultarTodos() {
 		sql = "SELECT * FROM ALUNO;";
-		Aluno[] lista_alunos = new Aluno[] {null};
+		Aluno[] listaAluno = new Aluno[] {null};
 		if (dbc.getConnection()) {
 			try {
 				if (dbc.getConnection()) {
 					dbc.st = dbc.con.prepareStatement(sql);
 					dbc.rs = dbc.st.executeQuery();
-
 					dbc.rs.last();
-					lista_alunos = new Aluno[dbc.rs.getRow()];
+					listaAluno = new Aluno[dbc.rs.getRow()];
 					dbc.rs.beforeFirst();
-
-					for (int i = 0; i < lista_alunos.length; i++) {
-						Aluno aluno = lista_alunos[i];
+					int count=0;
+					while (dbc.rs.next()) { 
+						Aluno aluno = listaAluno[count];
 						aluno.setCodAluno(dbc.rs.getInt(1));
 						aluno.setNomeAluno(dbc.rs.getString(2));
 						aluno.setNascAluno(dbc.rs.getDate(3));
 						aluno.setRgAluno(dbc.rs.getString(4));
 						aluno.setCpfAluno(dbc.rs.getString(5));
 						aluno.setEmailAluno(dbc.rs.getString(6));
-						aluno.setTeleAluno(dbc.rs.getString(7));
-						aluno.setStatusAluno(dbc.rs.getString(9));
-						aluno.setCodResponsavel(dbc.rs.getInt(10));
+						aluno.setTelAluno(dbc.rs.getString(7));
+						aluno.setUserAluno(dbc.rs.getString(8));
+						aluno.setSenhaAluno(dbc.rs.getString(9));
+						aluno.setStatusAluno(dbc.rs.getString(10));
+						aluno.setCodResp(dbc.rs.getInt(11));
+						count++;
 					}									
-
 				}			
-			} catch (SQLException e) {
-
-			} finally {
+			} 
+			catch (SQLException e) {
+				listaAluno = null;
+				JOptionPane.showMessageDialog(null,e, "Falha", 1);
+			} 
+			finally {
 				dbc.close();
 			}
 		}
-		return lista_alunos;
+		return listaAluno;
 	}
 
-	public Aluno consulta(Aluno a) {
+
+
+	/**
+	 * Método responsável por retornar um registro de acordo com o código fornecido
+	 * Tabela ALUNO
+	 * @param aluno - objeto instânciado da classe Aluno
+	 * @return aluno 
+	 */
+	public Aluno consultar(Aluno aluno) {
 		sql = "SELECT * FROM ALUNO WHERE codAluno=?;";
 		if (dbc.getConnection()) {
 			try {
 				if (dbc.getConnection()) {
 					dbc.st = dbc.con.prepareStatement(sql);
-					dbc.st.setInt(1, a.getCodAluno());
+					dbc.st.setInt(1, aluno.getCodAluno());
 					dbc.rs = dbc.st.executeQuery();
-					a.setNomeAluno(dbc.rs.getString(2));
-					a.setNascAluno(dbc.rs.getDate(3));
-					a.setRgAluno(dbc.rs.getString(4));
-					a.setCpfAluno(dbc.rs.getString(5));
-					a.setEmailAluno(dbc.rs.getString(6));
-					a.setTeleAluno(dbc.rs.getString(7));
-					a.setStatusAluno(dbc.rs.getString(9));
-					a.setCodResponsavel(dbc.rs.getInt(10));
+					aluno.setNomeAluno(dbc.rs.getString(2));
+					aluno.setNascAluno(dbc.rs.getDate(3));
+					aluno.setRgAluno(dbc.rs.getString(4));
+					aluno.setCpfAluno(dbc.rs.getString(5));
+					aluno.setEmailAluno(dbc.rs.getString(6));
+					aluno.setTelAluno(dbc.rs.getString(7));
+					aluno.setUserAluno(dbc.rs.getString(8));
+					aluno.setSenhaAluno(dbc.rs.getString(9));
+					aluno.setStatusAluno(dbc.rs.getString(10));
+					aluno.setCodResp(dbc.rs.getInt(11));
 				}			
-			} catch (SQLException e) {
-				a = null;
-			} finally {
+			} 
+			catch (SQLException e) {
+				aluno = null;
+			} 
+			finally {
 				dbc.close();
 			}
 		}
-
-		return a;
+		return aluno; 
 	}
 
+
+
+	/**
+	 * Método responsável por retornar o próximo número do índice no banco de dados
+	 * Tabela ALUNO
+	 * @return r - valor do próximo índice
+	 */
 	public int proximoId() {
-		sql = "SELECT IDENT_CURRENT('ALUNO')";
+		sql = "SELECT MAX('codAluno') FROM ALUNO;";
 		int r = 0;
 		if(dbc.getConnection()) {
 			try {
 				dbc.st = dbc.con.prepareStatement(sql);
 				dbc.rs = dbc.st.executeQuery();
 				r = dbc.rs.getInt(1)+1;
-			} catch (SQLException e) {
-				// TODO: handle exception
-			} finally {
+			}
+			catch (SQLException e) {
+				r = -1;
+			} 
+			finally {
 				dbc.close();
 			}
 		}
 		return r;
+	}
+
+
+
+	/**
+	 * Método responsável por atualizar o status de algum registro
+	 * Tabela ALUNO
+	 * @param aluno - objeto instânciado da classe Aluno
+	 * @return men - mensagem de aviso
+	 */
+	public String ativarInativar(Aluno aluno) {
+		if(aluno.getStatusAluno() == "A") {
+			sql = "UPDATE ALUNO SET statusAluno='I' WHERE codAluno=?;";
+		}
+		else {
+			sql = "UPDATE ALUNO SET statusAluno='A' WHERE codAluno=?;";
+		}
+		sql = "UPDATE ALUNO SET statusAluno WHERE codAluno=?;";
+		if (dbc.getConnection()) {
+			try {
+				dbc.st = dbc.con.prepareStatement(sql);
+				dbc.st.setInt(1, aluno.getCodAluno());
+				dbc.rs = dbc.st.executeQuery();
+				men = "O registro foi atualizado com sucesso";
+			}
+			catch (SQLException e) {
+				men = "Falha: " + e;
+			}
+			finally {
+				dbc.close();
+			}
+		}
+		return men;
+	}
+
+
+
+	/**
+	 * Método responsável por inserir um novo registro ou atualizar um registro existente
+	 * Tabela ALUNO
+	 * @param aluno - objeto instânciado da classe Aluno
+	 * @return men - mensagem de aviso
+	 */
+	public String inserirAtualizar(Aluno aluno) {
+		sql = "INSERT INTO ALUNO VALUES(?,?,?,?,?,?,?,?,?,?,?);";
+		if (dbc.getConnection()){
+			try {
+				dbc.st = dbc.con.prepareStatement(sql);
+				dbc.st.setInt(1, aluno.getCodAluno());
+				dbc.st.setString(2, aluno.getNomeAluno());
+				dbc.st.setDate(3, aluno.getNascAluno());
+				dbc.st.setString(4, aluno.getRgAluno());
+				dbc.st.setString(5, aluno.getCpfAluno());
+				dbc.st.setString(6, aluno.getEmailAluno());
+				dbc.st.setString(7, aluno.getTelAluno());
+				dbc.st.setString(8, aluno.getUserAluno());
+				dbc.st.setString(9, aluno.getSenhaAluno());
+				dbc.st.setString(10, aluno.getStatusAluno()); 
+				dbc.st.setInt(11, aluno.getCodResp());
+				dbc.rs = dbc.st.executeQuery();
+				men = "Inserido com sucesso";
+			}
+			catch (SQLException e) {
+				sql = "UPDATE ALUNO SET "
+						+ "nomeAluno=?"
+						+ "nascAluno=?"
+						+ "rgAluno=?"
+						+ "cpfAluno=?"
+						+ "emailAluno=?"
+						+ "telAluno=?"
+						+ "userAluno=?"
+						+ "nomeAluno=?"
+						+ "statusAluno=?"
+						+ "codResp=?"
+						+ "WHERE codAluno=?";
+				try {
+					if (dbc.getConnection()) {
+						dbc.st = dbc.con.prepareStatement(sql);
+						dbc.st.setString(1, aluno.getNomeAluno());
+						dbc.st.setDate(2, aluno.getNascAluno());
+						dbc.st.setString(3, aluno.getRgAluno());
+						dbc.st.setString(4, aluno.getCpfAluno());
+						dbc.st.setString(5, aluno.getEmailAluno());
+						dbc.st.setString(6, aluno.getTelAluno());
+						dbc.st.setString(7, aluno.getUserAluno());
+						dbc.st.setString(8, aluno.getSenhaAluno());
+						dbc.st.setString(9, aluno.getStatusAluno()); 
+						dbc.st.setInt(10, aluno.getCodResp()); 
+						dbc.st.setInt(11, aluno.getCodAluno());
+						dbc.rs = dbc.st.executeQuery();
+						men = "Atualizado com sucesso";
+					} 
+				}
+				catch (SQLException e2) {
+					men = "Falha: "+ e2;
+				}	
+			}
+			finally {
+				dbc.close();
+			}
+		}
+		return men;
 	}
 }

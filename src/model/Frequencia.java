@@ -1,77 +1,162 @@
 package model;
 
 import java.sql.Date;
+import java.sql.ResultSet;
+import java.text.SimpleDateFormat;
+import java.time.format.DateTimeParseException;
+
+import javax.swing.JOptionPane;
+
+import services.DbConn;
 
 /**
- * A classe "Frequencia" constitui-se na criaï¿½ï¿½o
- * do cadastro de frequï¿½ncia e seus atributos.
- * @author Andressa, Ede, Leonardo, Natï¿½lia.
+ * Essa classe é responsável por receber e estabelecer os atributos referentes a Frequência
+ * @author Simple Solution Devs
  */
 public class Frequencia {
-	private int codFrequencia;
-	private int codAluno;
-	private int codProfessor;
-	private Date dataFrequencia;
-	private String statusFrequencia;
+
 	/**
-	 * @return o codFrequencia
+	 * Atributos da classe (colunas da tabela FREQUENCIA)
 	 */
-	private int getCodFrequencia() {
-		return codFrequencia;
+	private int codFreq;
+	private Date dataFreq;
+	private String statusFreq;
+	private int codMat;
+
+
+
+	/**
+	 * Método construtor 1
+	 */
+	public Frequencia () {
+	}
+
+
+
+	//????
+	/**
+	 * Método construtor 2
+	 * @param codigo - valor do atributo codFreq
+	 */
+	public Frequencia (String codigo) {
+		DbConn cdb = new DbConn();
+		ResultSet rs = cdb.consultaRegistro("SELECT * FROM FREQUENCIA WHERE codFreq="+codigo+";");
+		try {
+			while (rs.next()) {
+				setCodFreq(Integer.parseInt(rs.getString(1).toString()));
+				SimpleDateFormat format = new SimpleDateFormat("dd/MM/yyyy");
+				setDataFreq((Date)format.parse(rs.getString(2).toString()));
+				setStatusFreq(rs.getString(3).toString());
+				setCodMat(Integer.parseInt(rs.getString(4).toString()));				
+			}
+		} 
+		catch (Exception e) {
+			// TODO: handle exception
+		}
+	}
+
+
+
+	/**
+	 * Método responsável por retornar o valor do codFreq
+	 * @return codFreq - valor do atributo
+	 */
+	public int getCodFreq() {
+		return codFreq;
 	}
 	/**
-	 * @param codFrequencia o codFrequencia para set
+	 * Método responsável por estabelecer o valor de codFreq e validar o mesmo
+	 * @param codFreq - valor do atributo
 	 */
-	private void setCodFrequencia(int codFrequencia) {
-		this.codFrequencia = codFrequencia;
+	public void setCodFreq(int codFreq) {
+		try {
+			if(codFreq == 0) {
+				JOptionPane.showMessageDialog(null, "O dado inserido deve ser maior que 0", "Código Frequência", 1);
+			}
+			else {
+				this.codFreq = codFreq;
+			}
+		}
+		catch(NumberFormatException e) {
+			JOptionPane.showMessageDialog(null, "O dado inserido deve ser um número", "Código Frequência", 1);
+		}
+	}
+
+
+
+	/**
+	 * Método responsável por retornar o valor do dataFreq
+	 * @return dataFreq - valor do atributo
+	 */
+	public Date getDataFreq() {
+		return dataFreq;
 	}
 	/**
-	 * @return o codAluno
+	 * Método responsável por estabelecer o valor de dataFreq e validar o mesmo
+	 * @param dataFreq - valor do atributo
 	 */
-	private int getCodAluno() {
-		return codAluno;
+	public void setDataFreq(Date dataFreq) {
+		try {
+			if(dataFreq == null) {
+				JOptionPane.showMessageDialog(null, "Campo nulo", "Data Frequência", 1);
+			}
+			else {
+				this.dataFreq = dataFreq;
+			}
+		}
+		catch(DateTimeParseException e){
+			JOptionPane.showMessageDialog(null, e, "Data Frequência", 1);
+		}
+	}
+
+
+
+	/**
+	 * Método responsável por retornar o valor do statusFreq
+	 * @return statusFreq - valor do atributo
+	 */
+	public String getStatusFreq() {
+		return statusFreq;
 	}
 	/**
-	 * @param codAluno o codAluno para set
+	 * Método responsável por estabelecer o valor de statusFreq e validar o mesmo
+	 * @param statusFreq - valor do atributo
 	 */
-	private void setCodAluno(int codAluno) {
-		this.codAluno = codAluno;
+	public void setStatusFreq(String statusFreq) {
+		if(statusFreq.length() > 1 || statusFreq == null || statusFreq == "" || statusFreq != "P" && statusFreq != "F") {
+			JOptionPane.showMessageDialog(null, "Tamanho acima do esperado, valor incorreto ou campo nulo", "Status Frequência", 1);
+		}
+		else {
+			this.statusFreq = statusFreq;
+		}
+	}
+
+
+
+	//SELECT PARA VALIDAR codMAt
+	/**
+	 * Método responsável por retornar o valor do codResponsavel
+	 * @return codMat - valor do atributo
+	 */
+	public int getCodMat() {
+		return codMat;
 	}
 	/**
-	 * @return o codProfessor
+	 * Método responsável por estabelecer o valor de codMat e validar o mesmo
+	 * @param codMat - valor do atributo
 	 */
-	private int getCodProfessor() {
-		return codProfessor;
+	public void setCodMat(int codMat) {
+		try {
+			if(codMat == 0) {
+				JOptionPane.showMessageDialog(null, "O dado inserido deve ser maior que 0", "Código Matrícula", 1);
+			}
+			else {
+				this.codMat = codMat;
+			}
+		}
+		catch(NumberFormatException e) {
+			JOptionPane.showMessageDialog(null, "O dado inserido deve ser um número", "Código Matrícula", 1);
+		}
 	}
-	/**
-	 * @param codProfessor o codProfessor para set
-	 */
-	private void setCodProfessor(int codProfessor) {
-		this.codProfessor = codProfessor;
-	}
-	/**
-	 * @return o dataFrequencia
-	 */
-	private Date getDataFrequencia() {
-		return dataFrequencia;
-	}
-	/**
-	 * @param dataFrequencia o dataFrequencia para set
-	 */
-	private void setDataFrequencia(Date dataFrequencia) {
-		this.dataFrequencia = dataFrequencia;
-	}
-	/**
-	 * @return o statusFrequencia
-	 */
-	private String getStatusFrequencia() {
-		return statusFrequencia;
-	}
-	/**
-	 * @param statusFrequencia o statusFrequencia para set
-	 */
-	private void setStatusFrequencia(String statusFrequencia) {
-		this.statusFrequencia = statusFrequencia;
-	}
-	
+
 }
