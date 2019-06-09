@@ -1,20 +1,21 @@
 package model;
 
 import java.sql.SQLException;
+import java.util.ArrayList;
 
 import javax.swing.JOptionPane;
 
 import services.DbConn;
 
 /**
-* Essa classe é responsável por acessar o banco de dados e atualizar a tabela PROFESSOR
-* Comunicação com a classe Professor
+* Essa classe ï¿½ responsï¿½vel por acessar o banco de dados e atualizar a tabela PROFESSOR
+* Comunicaï¿½ï¿½o com a classe Professor
 * @author Simple Solution Devs
 */
 public class ProfessorDAO {
 
 	/**
-	 * Atributos para realizar conexão com o banco de dados
+	 * Atributos para realizar conexï¿½o com o banco de dados
 	 */
 	private DbConn dbc = new DbConn();
 	private String men, sql;
@@ -22,60 +23,64 @@ public class ProfessorDAO {
 
 	
 	/**
-	 * Validar os atributos userProf e senhaProf para o usuário poder efetuar o login
+	 * Validar os atributos userProf e senhaProf para o usuï¿½rio poder efetuar o login
 	 * Tabela PROFESSOR
 	 * @param user - valor recebido para o atributo userProf
 	 * @param senha - valor recebido para o atributo senhaProf
 	 * @return valor boolean - TRUE (select retornado com sucesso) ou FALSE (select sem retorno ou cadastro inativo)
 	 */
-	public boolean efetuarLogin(String user, String senha) {
-		sql = "SELECT statusProf FROM PROFESSOR WHERE userProf=? AND senhaProf=?";
+	public String efetuarLogin(String user, String senha) {
+		sql = "SELECT nomeProf, statusProf FROM PROFESSOR WHERE userProf=? AND senhaProf=?";
 		if (dbc.getConnection()) {
 			try {
 				dbc.st = dbc.con.prepareStatement(sql);
 				dbc.st.setString(1, user.trim());
 				dbc.st.setString(2, senha.trim());
 				dbc.rs = dbc.st.executeQuery();
-				String res = dbc.rs.toString();
-				if(res == "A") { 
-					return true;
+				while (dbc.rs.next()) {
+					
+					if (dbc.rs.getString(2).indexOf("A") != -1) {
+						return dbc.rs.getString(1);
+					}
+					else {
+						JOptionPane.showMessageDialog(null,"UsuÃ¡rio Inativo");
+						return null;
+					}
 				}
-				else {
-					JOptionPane.showMessageDialog(null,"Usuário inativo", "Login Professor", 1);
-					return false; 
+				if (dbc.rs.getRow()==0) {
+					JOptionPane.showMessageDialog(null,"UsuÃ¡rio ou Senha invÃ¡lidos ");
+					return null;
 				}
+
 			}
-			catch (SQLException e) {
-				JOptionPane.showMessageDialog(null,e, "Falha", 1);
-				return false;
+			catch (SQLException e) {				
+				return null;
 			}
 			finally {
 				dbc.close();
 			}
 		}
-		return false;
+		return null;
 	}
 	
 	
 
 	/**
-	 * Método responsável por retornar uma lista com o registro de todos os professores
+	 * Mï¿½todo responsï¿½vel por retornar uma lista com o registro de todos os professores
 	 * @return listaProf - lista de professores (array)
 	 */
-	public Professor[] consultarTodos() {
+	public ArrayList<Professor> consultarTodos() {
 		sql = "SELECT * FROM PROFESSOR;";
-		Professor[] listaProf = new Professor[] {null};
+		ArrayList<Professor> listaProf = new ArrayList<Professor>();
 		if (dbc.getConnection()) {
 			try {
 				if (dbc.getConnection()) {
 					dbc.st = dbc.con.prepareStatement(sql);
 					dbc.rs = dbc.st.executeQuery();
-					dbc.rs.last();
-					listaProf = new Professor[dbc.rs.getRow()];
-					dbc.rs.beforeFirst();
-					int count=0;
+
+
 					while (dbc.rs.next()) {
-						Professor professor = listaProf[count];
+						Professor professor = new Professor();
 						professor.setCodProf(dbc.rs.getInt(1));
 						professor.setNomeProf(dbc.rs.getString(2));
 						professor.setNascProf(dbc.rs.getDate(3));
@@ -86,7 +91,7 @@ public class ProfessorDAO {
 						professor.setUserProf(dbc.rs.getString(8));
 						professor.setSenhaProf(dbc.rs.getString(9));
 						professor.setStatusProf(dbc.rs.getString(10));
-						count++;
+						listaProf.add(professor);
 					}									
 				}			
 			} 
@@ -104,9 +109,9 @@ public class ProfessorDAO {
 
 
 	/**
-	 * Método responsável por retornar um registro de acordo com o código fornecido
+	 * Mï¿½todo responsï¿½vel por retornar um registro de acordo com o cï¿½digo fornecido
 	 * Tabela PROFESSOR
-	 * @param professor - objeto instânciado da classe Professor
+	 * @param professor - objeto instï¿½nciado da classe Professor
 	 * @return professor 
 	 */
 	public Professor consultar(Professor professor) {
@@ -117,15 +122,17 @@ public class ProfessorDAO {
 					dbc.st = dbc.con.prepareStatement(sql);
 					dbc.st.setInt(1, professor.getCodProf());
 					dbc.rs = dbc.st.executeQuery();
-					professor.setNomeProf(dbc.rs.getString(2));
-					professor.setNascProf(dbc.rs.getDate(3));
-					professor.setRgProf(dbc.rs.getString(4));
-					professor.setCpfProf(dbc.rs.getString(5));
-					professor.setEmailProf(dbc.rs.getString(6));
-					professor.setTelProf(dbc.rs.getString(7));
-					professor.setUserProf(dbc.rs.getString(8));
-					professor.setSenhaProf(dbc.rs.getString(9));
-					professor.setStatusProf(dbc.rs.getString(10));
+					while (dbc.rs.next()) {
+						professor.setNomeProf(dbc.rs.getString(2));
+						professor.setNascProf(dbc.rs.getDate(3));
+						professor.setRgProf(dbc.rs.getString(4));
+						professor.setCpfProf(dbc.rs.getString(5));
+						professor.setEmailProf(dbc.rs.getString(6));
+						professor.setTelProf(dbc.rs.getString(7));
+						professor.setUserProf(dbc.rs.getString(8));
+						professor.setSenhaProf(dbc.rs.getString(9));
+						professor.setStatusProf(dbc.rs.getString(10));
+					}
 				}			
 			} 
 			catch (SQLException e) {
@@ -141,18 +148,21 @@ public class ProfessorDAO {
 
 
 	/**
-	 * Método responsável por retornar o próximo número do índice no banco de dados
+	 * Mï¿½todo responsï¿½vel por retornar o prï¿½ximo nï¿½mero do ï¿½ndice no banco de dados
 	 * Tabela PROFESSOR
-	 * @return r - valor do próximo índice
+	 * @return r - valor do prï¿½ximo ï¿½ndice
 	 */
 	public int proximoId() {
-		sql = "SELECT MAX('codProf') FROM PROFESSOR";
+		sql = "SELECT MAX(codProf) FROM PROFESSOR";
 		int r = 0;
 		if(dbc.getConnection()) {
 			try {
 				dbc.st = dbc.con.prepareStatement(sql);
 				dbc.rs = dbc.st.executeQuery();
-				r = dbc.rs.getInt(1)+1;
+				while (dbc.rs.next()) {
+					r = dbc.rs.getInt(1)+1;
+				}
+				
 			}
 			catch (SQLException e) {
 				r = -1;
@@ -167,9 +177,9 @@ public class ProfessorDAO {
 
 
 	/**
-	 * Método responsável por atualizar o status de algum registro
+	 * Mï¿½todo responsï¿½vel por atualizar o status de algum registro
 	 * Tabela PROFESSOR
-	 * @param professor - objeto instânciado da classe Professor
+	 * @param professor - objeto instï¿½nciado da classe Professor
 	 * @return men - mensagem de aviso
 	 */
 	public String ativarInativar(Professor professor) {
@@ -200,9 +210,9 @@ public class ProfessorDAO {
 
 
 	/**
-	 * Método responsável por inserir um novo registro ou atualizar um registro existente
+	 * Mï¿½todo responsï¿½vel por inserir um novo registro ou atualizar um registro existente
 	 * Tabela PROFESSOR
-	 * @param professor - objeto instânciado da classe Professor
+	 * @param professor - objeto instï¿½nciado da classe Professor
 	 * @return men - mensagem de aviso
 	 */
 	public String inserirAtualizar(Professor professor) {

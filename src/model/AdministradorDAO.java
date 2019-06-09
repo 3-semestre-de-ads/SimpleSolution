@@ -1,20 +1,21 @@
 package model;
 
 import java.sql.SQLException;
+import java.util.ArrayList;
 
 import javax.swing.JOptionPane;
 
 import services.DbConn;
 
 /**
- * Essa classe é responsável por acessar o banco de dados e atualizar a tabela ADMINISTRADOR
- * Comunicação com a classe Administrador
+ * Essa classe ï¿½ responsï¿½vel por acessar o banco de dados e atualizar a tabela ADMINISTRADOR
+ * Comunicaï¿½ï¿½o com a classe Administrador
  * @author Simple Solution Devs
  */
 public class AdministradorDAO {
 
 	/**
-	 * Atributos para realizar conexão com o banco de dados
+	 * Atributos para realizar conexï¿½o com o banco de dados
 	 */
 	private DbConn dbc = new DbConn();
 	private String sql;
@@ -23,7 +24,7 @@ public class AdministradorDAO {
 
 
 	/**
-	 * Validar os atributos userAdmin e senhaAdmin para o usuário poder efetuar o login
+	 * Validar os atributos userAdmin e senhaAdmin para o usuï¿½rio poder efetuar o login
 	 * Tabela ADMINISTRADOR
 	 * @param user - valor recebido para o atributo userAdmin
 	 * @param senha - valor recebido para o atributo senhaAdmin
@@ -35,19 +36,24 @@ public class AdministradorDAO {
 			try {
 				dbc.st = dbc.con.prepareStatement(sql);
 				dbc.st.setString(1, user.trim());
-				dbc.st.setString(2, senha.trim());
+				dbc.st.setString(2, senha.trim());	
 				dbc.rs = dbc.st.executeQuery();
-				String res = dbc.rs.toString();
-				if(res == "A") { 
-					return true;
+				while (dbc.rs.next()) {
+					System.out.println(dbc.rs.getString(1));
+					if (dbc.rs.getString(1).indexOf("A") != -1) {
+						return true;
+					}
+					else {
+						JOptionPane.showMessageDialog(null,"UsuÃ¡rio Inativo");
+						return false;
+					}
 				}
-				else {
-					JOptionPane.showMessageDialog(null,"Usuário inativo", "Login Administrador", 1);
+				if (dbc.rs.getRow()==0) {
+					JOptionPane.showMessageDialog(null,"UsuÃ¡rio ou Senha invÃ¡lidos ");
 					return false;
 				}
 			}
-			catch (SQLException e) {
-				JOptionPane.showMessageDialog(null,e, "Falha", 1);
+			catch (SQLException e) {				
 				return false;
 			}
 			finally {
@@ -55,33 +61,31 @@ public class AdministradorDAO {
 			}
 		}
 		return false;
+
 	}
 
 
 	
 	/**
-	 * Método responsável por retornar uma lista com o registro de todos os administradores
+	 * Mï¿½todo responsï¿½vel por retornar uma lista com o registro de todos os administradores
 	 * @return listaAdmin - lista de administradores (array)
 	 */
-	public Administrador[] consultarTodos() {
+	public ArrayList<Administrador> consultarTodos() {
 		sql = "SELECT * FROM ADMINISTRADOR;";
-		Administrador[] listaAdmin = new Administrador[] {null};
+		ArrayList<Administrador>  listaAdmin = new ArrayList<Administrador>();
 		if (dbc.getConnection()) {
 			try {
 				if (dbc.getConnection()) {
 					dbc.st = dbc.con.prepareStatement(sql);
 					dbc.rs = dbc.st.executeQuery();
-					dbc.rs.last();
-					listaAdmin = new Administrador[dbc.rs.getRow()];
-					dbc.rs.beforeFirst();
-					int count=0;
+
 					while (dbc.rs.next()) { 
-						Administrador administrador = listaAdmin[count];
+						Administrador administrador = new Administrador();
 						administrador.setCodAdmin(dbc.rs.getInt(1));
 						administrador.setUserAdmin(dbc.rs.getString(2));
 						administrador.setSenhaAdmin(dbc.rs.getString(3));
 						administrador.setStatusAdmin(dbc.rs.getString(4));
-						count++;
+						listaAdmin.add(administrador);
 					}									
 				}			
 			} 
@@ -99,18 +103,20 @@ public class AdministradorDAO {
 	
 	
 	/**
-	 * Método que retorna o próximo número do índice no banco de dados
+	 * Mï¿½todo que retorna o prï¿½ximo nï¿½mero do ï¿½ndice no banco de dados
 	 * Tabela ADMINISTRADOR
-	 * @return r - valor do próximo índice
+	 * @return r - valor do prï¿½ximo ï¿½ndice
 	 */
 	public int proximoId() {
-		sql = "SELECT MAX('codAdmin') FROM ADMINISTRADOR;";
+		sql = "SELECT MAX(codAdmin) FROM ADMINISTRADOR;";
 		int r = 0;
 		if(dbc.getConnection()) {
 			try {
 				dbc.st = dbc.con.prepareStatement(sql);
 				dbc.rs = dbc.st.executeQuery();
-				r = dbc.rs.getInt(1)+1;
+				while (dbc.rs.next()) {
+					r = dbc.rs.getInt(1)+1;
+				}				
 			} catch (SQLException e) {
 				r = -1;
 			} finally {
@@ -124,9 +130,9 @@ public class AdministradorDAO {
 
 	
 	/**
-	 * Método responsável por atualizar o status de algum registro
+	 * Mï¿½todo responsï¿½vel por atualizar o status de algum registro
 	 * Tabela ADMINISTRADOR
-	 * @param administrador - objeto instânciado da classe Administrador
+	 * @param administrador - objeto instï¿½nciado da classe Administrador
 	 * @return men - mensagem de aviso
 	 */
 	public String ativarInativar(Administrador administrador) {
@@ -153,14 +159,34 @@ public class AdministradorDAO {
 		}
 		return men;
 	}
-
-
-
-
+	
+	public Administrador consultar(Administrador admin) {
+		sql = "SELECT * FROM ADMINISTRADOR WHERE codAdmin=?;";
+		if (dbc.getConnection()) {
+			try {
+				if (dbc.getConnection()) {
+					dbc.st = dbc.con.prepareStatement(sql);
+					dbc.st.setInt(1, admin.getCodAdmin());
+					dbc.rs = dbc.st.executeQuery();
+					while (dbc.rs.next()) {
+						admin.setUserAdmin(dbc.rs.getString(2));
+						admin.setSenhaAdmin(dbc.rs.getString(3));
+					}
+				}			
+			} 
+			catch (SQLException e) {
+				admin = null;
+			} 
+			finally {
+				dbc.close();
+			}
+		}
+		return admin; 
+	}
 	/**
-	 * Método responsável por inserir um novo registro ou atualizar um registro existente
+	 * Mï¿½todo responsï¿½vel por inserir um novo registro ou atualizar um registro existente
 	 * Tabela ADMINISTRADOR
-	 * @param administrador - objeto instânciado da classe Administrador
+	 * @param administrador - objeto instï¿½nciado da classe Administrador
 	 * @return men - mensagem de aviso
 	 */
 	public String inserirAtualizar(Administrador administrador) {

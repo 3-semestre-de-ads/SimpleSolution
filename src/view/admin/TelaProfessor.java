@@ -5,6 +5,10 @@ import org.eclipse.swt.widgets.Shell;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.widgets.Text;
+
+import model.Professor;
+import model.ProfessorDAO;
+
 import org.eclipse.swt.widgets.DateTime;
 import org.eclipse.swt.widgets.Table;
 import org.eclipse.swt.widgets.TableColumn;
@@ -15,23 +19,51 @@ import org.eclipse.swt.events.SelectionEvent;
 public class TelaProfessor {
 
 	protected Shell shlProfessor;
-	private Text text;
-	private Text text_1;
-	private Text text_2;
-	private Text text_3;
-	private Text text_4;
-	private Text text_5;
-	private Table table;
+	private Text txbCodigo;
+	private Text txbNome;
+	private Text txbEmail;
+	private Text txbRg;
+	private Text txbTelefone;
+	private Text txbCpf;
+	private Table tableTurmas;
 
+	private void novo() {
+		ProfessorDAO dao = new ProfessorDAO();
+		txbCodigo.setText(Integer.toString(dao.proximoId()));
+		tableTurmas.setEnabled(false);
+		shlProfessor.setText("Professor - Novo");
+		
+	}
 
-
+	private void populaProfessor(Professor professor) {
+		
+		txbCodigo.setText(Integer.toString(professor.getCodProf()));
+		ProfessorDAO dao = new ProfessorDAO();
+		professor =  dao.consultar(professor);
+		shlProfessor.setText("Professor - " + professor.getNomeProf());
+		txbNome.setText(professor.getNomeProf());
+		txbEmail.setText(professor.getEmailProf());
+		txbRg.setText(professor.getRgProf());
+		txbCpf.setText(professor.getCpfProf());
+		txbTelefone.setText(professor.getTelProf());
+		
+	}
+	
+	private void populaTabelaTurmas() {
+		
+	}
 	/**
 	 * Open the window.
 	 * @wbp.parser.entryPoint
 	 */
-	public void open() {
+	public void open(Professor professor) {
 		Display display = Display.getDefault();
 		createContents();
+		if (professor == null) {
+			novo();
+		}else {
+			populaProfessor(professor);
+		}
 		shlProfessor.open();
 		shlProfessor.layout();
 		while (!shlProfessor.isDisposed()) {
@@ -53,24 +85,24 @@ public class TelaProfessor {
 		label.setText("Código");
 		label.setBounds(10, 10, 68, 20);
 		
-		text = new Text(shlProfessor, SWT.BORDER);
-		text.setEnabled(false);
-		text.setEditable(false);
-		text.setBounds(10, 38, 153, 30);
+		txbCodigo = new Text(shlProfessor, SWT.BORDER);
+		txbCodigo.setEnabled(false);
+		txbCodigo.setEditable(false);
+		txbCodigo.setBounds(10, 38, 153, 30);
 		
 		Label label_1 = new Label(shlProfessor, SWT.NONE);
 		label_1.setText("Nome");
 		label_1.setBounds(10, 74, 68, 20);
 		
-		text_1 = new Text(shlProfessor, SWT.BORDER);
-		text_1.setBounds(10, 100, 340, 30);
+		txbNome = new Text(shlProfessor, SWT.BORDER);
+		txbNome.setBounds(10, 100, 340, 30);
 		
 		Label label_2 = new Label(shlProfessor, SWT.NONE);
 		label_2.setText("E-mail");
 		label_2.setBounds(10, 136, 68, 20);
 		
-		text_2 = new Text(shlProfessor, SWT.BORDER);
-		text_2.setBounds(10, 159, 340, 30);
+		txbEmail = new Text(shlProfessor, SWT.BORDER);
+		txbEmail.setBounds(10, 159, 340, 30);
 		
 		Label label_3 = new Label(shlProfessor, SWT.NONE);
 		label_3.setText("Data de Nascimento");
@@ -80,14 +112,14 @@ public class TelaProfessor {
 		label_4.setText("RG");
 		label_4.setBounds(10, 195, 68, 20);
 		
-		text_3 = new Text(shlProfessor, SWT.BORDER);
-		text_3.setBounds(10, 221, 133, 30);
+		txbRg = new Text(shlProfessor, SWT.BORDER);
+		txbRg.setBounds(10, 221, 133, 30);
 		
-		DateTime dateTime = new DateTime(shlProfessor, SWT.BORDER | SWT.CALENDAR | SWT.SHORT);
-		dateTime.setBounds(149, 221, 201, 157);
+		DateTime dtNasc = new DateTime(shlProfessor, SWT.BORDER | SWT.CALENDAR | SWT.SHORT);
+		dtNasc.setBounds(149, 221, 201, 157);
 		
-		text_4 = new Text(shlProfessor, SWT.BORDER);
-		text_4.setBounds(10, 286, 133, 30);
+		txbTelefone = new Text(shlProfessor, SWT.BORDER);
+		txbTelefone.setBounds(10, 286, 133, 30);
 		
 		Label label_5 = new Label(shlProfessor, SWT.NONE);
 		label_5.setText("Telefone");
@@ -97,31 +129,31 @@ public class TelaProfessor {
 		label_6.setText("CPF");
 		label_6.setBounds(10, 322, 68, 20);
 		
-		text_5 = new Text(shlProfessor, SWT.BORDER);
-		text_5.setBounds(10, 348, 133, 30);
+		txbCpf = new Text(shlProfessor, SWT.BORDER);
+		txbCpf.setBounds(10, 348, 133, 30);
 		
 		Label lblNewLabel = new Label(shlProfessor, SWT.NONE);
 		lblNewLabel.setBounds(369, 10, 68, 20);
 		lblNewLabel.setText("Turmas");
 		
-		table = new Table(shlProfessor, SWT.BORDER | SWT.FULL_SELECTION);
-		table.setBounds(369, 38, 344, 380);
-		table.setHeaderVisible(true);
-		table.setLinesVisible(true);
+		tableTurmas = new Table(shlProfessor, SWT.BORDER | SWT.FULL_SELECTION);
+		tableTurmas.setBounds(369, 38, 344, 380);
+		tableTurmas.setHeaderVisible(true);
+		tableTurmas.setLinesVisible(true);
 		
-		TableColumn tblclmnCodigo = new TableColumn(table, SWT.NONE);
+		TableColumn tblclmnCodigo = new TableColumn(tableTurmas, SWT.NONE);
 		tblclmnCodigo.setWidth(72);
 		tblclmnCodigo.setText("Codigo");
 		
-		TableColumn tblclmnIdioma = new TableColumn(table, SWT.NONE);
+		TableColumn tblclmnIdioma = new TableColumn(tableTurmas, SWT.NONE);
 		tblclmnIdioma.setWidth(103);
 		tblclmnIdioma.setText("Idioma");
 		
-		TableColumn tblclmnTe = new TableColumn(table, SWT.NONE);
+		TableColumn tblclmnTe = new TableColumn(tableTurmas, SWT.NONE);
 		tblclmnTe.setWidth(65);
 		tblclmnTe.setText("TE");
 		
-		TableColumn tblclmnNa = new TableColumn(table, SWT.NONE);
+		TableColumn tblclmnNa = new TableColumn(tableTurmas, SWT.NONE);
 		tblclmnNa.setWidth(100);
 		tblclmnNa.setText("NA");
 		

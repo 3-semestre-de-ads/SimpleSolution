@@ -10,7 +10,7 @@ public class DbConn {
 	private final String DRIVER = "com.microsoft.sqlserver.jdbc.SQLServerDriver";
 	private final String LOGIN  = "SA";
 	private final String SENHA = "simpleSolution123";
-	private final String DATABASE = "SIMPLESOLUTIONSCHOOL";
+	private final String DATABASE = "SIMPLESOLUTION";
 	private final String URL = "jdbc:sqlserver://172.17.0.2:1433; "
 			+ "databaseName="+DATABASE;
 	
@@ -44,22 +44,6 @@ public class DbConn {
 			}
 		}
 		catch(SQLException erro) {}
-	}
-	
-	public ResultSet consultaRegistro(String sqlString) {
-		DbConn dbc = new DbConn();		
-		if (dbc.getConnection()) {
-			try {
-				dbc.st = dbc.con.prepareStatement(sqlString);
-				dbc.rs = dbc.st.executeQuery();
-				return dbc.rs;
-			} catch (SQLException e) {
-				return null;
-			}
-
-		}else {
-			return null;
-		}
-	}
+	}	
 
 }

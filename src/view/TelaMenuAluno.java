@@ -22,11 +22,11 @@ public class TelaMenuAluno {
 	 * Open the window.
 	 * @wbp.parser.entryPoint
 	 */
-	public void open() {
+	public void open(String aluno) {
 		Display display = Display.getDefault();
 		Shell shell = new Shell();
-		shell.setSize(858, 495);
-		shell.setText("Simple Solution - Aluno");
+		shell.setMaximized(true);
+		shell.setText("Simple Solution - "+aluno);
 		GridLayout gl_shell = new GridLayout(3, false);
 		gl_shell.verticalSpacing = 3;
 		shell.setLayout(gl_shell);

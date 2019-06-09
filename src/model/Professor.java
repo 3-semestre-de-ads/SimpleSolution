@@ -10,7 +10,7 @@ import javax.swing.JOptionPane;
 import services.DbConn;
 
 /**
- * Essa classe é responsável por receber e estabelecer os atributos referentes a Professor
+ * Essa classe ï¿½ responsï¿½vel por receber e estabelecer os atributos referentes a Professor
  * @author Simple Solution Devs
  */
 public class Professor {
@@ -32,82 +32,45 @@ public class Professor {
 
 
 	/**
-	 * Método construtor 1
-	 */
-	public Professor() {
-	}
-
-
-
-	/**
-	 * Método construtor 2
-	 * @param codigo - valor do atributo codProf
-	 */
-	public Professor(String codigo) {
-		DbConn cdb = new DbConn();
-		ResultSet rs = cdb.consultaRegistro("SELECT * FROM PROFESSOR WHERE codProf="+codigo+";");
-		try {
-			while (rs.next()) {
-				setCodProf(Integer.parseInt(rs.getString(1).toString()));
-				setNomeProf(rs.getString(2).toString());
-				SimpleDateFormat format = new SimpleDateFormat("dd/MM/yyyy");				
-				setNascProf((Date)format.parse(rs.getString(3).toString()));
-				setRgProf(rs.getString(4).toString());
-				setCpfProf(rs.getString(5).toString());
-				setEmailProf(rs.getString(6).toString());
-				setTelProf(rs.getString(7).toString());
-				setUserProf(rs.getString(8).toString());
-				setSenhaProf(rs.getString(9).toString());
-				setStatusProf(rs.getString(10).toString());
-			}
-		} catch (Exception e) {
-			// TODO: handle exception
-		}
-
-	}
-
-	
-
-	/**
-	 * Método responsável por retornar o valor do codProf
+	 * Mï¿½todo responsï¿½vel por retornar o valor do codProf
 	 * @return codProf - valor do atributo
 	 */
 	public int getCodProf() {
 		return codProf;
 	}
 	/**
-	 * Método responsável por estabelecer o valor de codProf e validar o mesmo
+	 * Mï¿½todo responsï¿½vel por estabelecer o valor de codProf e validar o mesmo
 	 * @param codProf - valor do atributo
 	 */
 	public void setCodProf(int codProf) {
 		try {
 			if(codProf == 0) {
-				JOptionPane.showMessageDialog(null, "O dado inserido deve ser maior que 0", "Código Professor", 1);
+				JOptionPane.showMessageDialog(null, "O dado inserido deve ser maior que 0", "Cï¿½digo Professor", 1);
 			}
 			else {
 				this.codProf = codProf;
 			}
 		}
 		catch(NumberFormatException e) {
-			JOptionPane.showMessageDialog(null, "O dado inserido deve ser um número", "Código Professor", 1);
+			JOptionPane.showMessageDialog(null, "O dado inserido deve ser um nï¿½mero", "Cï¿½digo Professor", 1);
 		}
 	}
 
 	
 
 	/**
-	 * Método responsável por retornar o valor do nomeProf
+	 * Mï¿½todo responsï¿½vel por retornar o valor do nomeProf
 	 * @return nomeProf - valor do atributo
 	 */
 	public String getNomeProf() {
 		return nomeProf;
 	}
 	/**
-	 * Método responsável por estabelecer o valor de nomeProf e validar o mesmo
+	 * Mï¿½todo responsï¿½vel por estabelecer o valor de nomeProf e validar o mesmo
 	 * @param nomeProf - valor do atributo
 	 */
 	public void setNomeProf(String nomeProf) {
-		if(nomeProf.length() < 20 || nomeProf == null || nomeProf == "") {
+		if(nomeProf.length() > 20 || nomeProf == null || nomeProf == "") {
 			JOptionPane.showMessageDialog(null, "Tamanho acima do esperado ou campo nulo", "Nome Professor", 1);
 		}
 		else {
@@ -118,14 +81,14 @@ public class Professor {
 	
 	
 	/**
-	 * Método responsável por retornar o valor do nascProf
+	 * Mï¿½todo responsï¿½vel por retornar o valor do nascProf
 	 * @return nascProf - valor do atributo
 	 */
 	public Date getNascProf() {
 		return nascProf;
 	}
 	/**
-	 * Método responsável por estabelecer o valor de nascProf e validar o mesmo
+	 * Mï¿½todo responsï¿½vel por estabelecer o valor de nascProf e validar o mesmo
 	 * @param nascProf - valor do atributo
 	 */
 	public void setNascProf(Date nascProf) {
@@ -145,19 +108,19 @@ public class Professor {
 
 
 	/**
-	 * Método responsável por retornar o valor do rgProf
+	 * Mï¿½todo responsï¿½vel por retornar o valor do rgProf
 	 * @return rgProf - valor do atributo
 	 */
 	public String getRgProf() {
 		return rgProf;
 	}
 	/**
-	 * Método responsável por estabelecer o valor de rgProf e validar o mesmo
+	 * Mï¿½todo responsï¿½vel por estabelecer o valor de rgProf e validar o mesmo
 	 * @param rgProf - valor do atributo
 	 */
 	public void setRgProf(String rgProf) {
 		try {
-			if(rgProf.length() < 10 || rgProf == null || rgProf == "") {
+			if(rgProf.length() > 10 || rgProf == null || rgProf == "") {
 				JOptionPane.showMessageDialog(null, "Tamanho acima do esperado", "RG Professor", 1);
 			}
 			else {
@@ -165,26 +128,26 @@ public class Professor {
 			}
 		}
 		catch(NumberFormatException e) {
-			JOptionPane.showMessageDialog(null, "O dado inserido deve ser um número, campo nulo ou vazio", "RG Professor", 1);
+			JOptionPane.showMessageDialog(null, "O dado inserido deve ser um nï¿½mero, campo nulo ou vazio", "RG Professor", 1);
 		}
 	}
 
 
 
 	/**
-	 * Método responsável por retornar o valor do cpfProf
+	 * Mï¿½todo responsï¿½vel por retornar o valor do cpfProf
 	 * @return cpfProf - valor do atributo
 	 */
 	public String getCpfProf() {
 		return cpfProf;
 	}
 	/**
-	 * Método responsável por estabelecer o valor de cpfProf e validar o mesmo
+	 * Mï¿½todo responsï¿½vel por estabelecer o valor de cpfProf e validar o mesmo
 	 * @param cpfProf - valor do atributo
 	 */
 	public void setCpfProf(String cpfProf) {
 		try {
-			if(cpfProf.length() < 11 || cpfProf == null || cpfProf == "") {
+			if(cpfProf.length() > 11 || cpfProf == null || cpfProf == "") {
 				JOptionPane.showMessageDialog(null, "Tamanho acima do esperado, campo nulo ou vazio", "CPF Professor", 1);
 			}
 			else {
@@ -192,26 +155,26 @@ public class Professor {
 			}
 		}
 		catch(NumberFormatException e) {
-			JOptionPane.showMessageDialog(null, "O dado inserido deve ser um número", "CPF Professor", 1);
+			JOptionPane.showMessageDialog(null, "O dado inserido deve ser um nï¿½mero", "CPF Professor", 1);
 		}
 	}
 
 
 
 	/**
-	 * Método responsável por retornar o valor do emilProf
+	 * Mï¿½todo responsï¿½vel por retornar o valor do emilProf
 	 * @return emailProf - valor do atributo
 	 */
 	public String getEmailProf() {
 		return emailProf;
 	}
 	/**
-	 * Método responsável por estabelecer o valor de emailProf e validar o mesmo
+	 * Mï¿½todo responsï¿½vel por estabelecer o valor de emailProf e validar o mesmo
 	 * @param emailProf - valor do atributo
 	 */
 	public void setEmailProf(String emailProf) {
 		try {
-			if(emailProf.length() < 35 || emailProf == null || emailProf == "") {
+			if(emailProf.length() > 35 || emailProf == null || emailProf == "") {
 				JOptionPane.showMessageDialog(null, "Tamanho acima do esperado, campo nulo ou vazio", "E-mail Professor", 1);
 			}
 			else {
@@ -219,25 +182,25 @@ public class Professor {
 			}
 		}
 		catch(NumberFormatException e) {
-			JOptionPane.showMessageDialog(null, "O dado inserido deve ser um número", "E-mail Professor", 1);
+			JOptionPane.showMessageDialog(null, "O dado inserido deve ser um nï¿½mero", "E-mail Professor", 1);
 		}
 	}
 
 
 
 	/**
-	 * Método responsável por retornar o valor do telProf
+	 * Mï¿½todo responsï¿½vel por retornar o valor do telProf
 	 * @return telProf - valor do atributo
 	 */
 	public String getTelProf() {
 		return telProf;
 	}
 	/**
-	 * Método responsável por estabelecer o valor de telProf e validar o mesmo
+	 * Mï¿½todo responsï¿½vel por estabelecer o valor de telProf e validar o mesmo
 	 * @param telProf - valor do atributo
 	 */
 	public void setTelProf(String telProf) {
-		if(telProf.length() < 11 || telProf == null || telProf == "") {
+		if(telProf.length() > 11 || telProf == null || telProf == "") {
 			JOptionPane.showMessageDialog(null, "Tamanho acima do esperado ou campo nulo", "Telefone Professor", 1);
 		}
 		else {
@@ -248,14 +211,14 @@ public class Professor {
 
 
 	/**
-	 * Método responsável por retornar o valor do userProf
+	 * Mï¿½todo responsï¿½vel por retornar o valor do userProf
 	 * @return userProf - valor do atributo
 	 */
 	public String getUserProf() {
 		return userProf;
 	}
 	/**
-	 * Método responsável por estabelecer o valor de userProf e validar o mesmo
+	 * Mï¿½todo responsï¿½vel por estabelecer o valor de userProf e validar o mesmo
 	 * @param userProf - valor do atributo
 	 */
 	public void setUserProf(String userProf) {
@@ -270,14 +233,14 @@ public class Professor {
 
 
 	/**
-	 * Método responsável por retornar o valor do senhaProf
+	 * Mï¿½todo responsï¿½vel por retornar o valor do senhaProf
 	 * @return senhaProf - valor do atributo
 	 */
 	public String getSenhaProf() {
 		return senhaProf;
 	}
 	/**
-	 * Método responsável por estabelecer o valor de senhaProf e validar o mesmo
+	 * Mï¿½todo responsï¿½vel por estabelecer o valor de senhaProf e validar o mesmo
 	 * @param senhaProf - valor do atributo
 	 */
 	public void setSenhaProf(String senhaProf) {
@@ -292,14 +255,14 @@ public class Professor {
 
 
 	/**
-	 * Método responsável por retornar o valor do statusProf
+	 * Mï¿½todo responsï¿½vel por retornar o valor do statusProf
 	 * @return statusProf - valor do atributo
 	 */
 	public String getStatusProf() {
 		return statusProf;
 	}
 	/**
-	 * Método responsável por estabelecer o valor de statusProf e validar o mesmo
+	 * Mï¿½todo responsï¿½vel por estabelecer o valor de statusProf e validar o mesmo
 	 * @param statusProf - valor do atributo
 	 */
 	public void setStatusProf(String statusProf) {

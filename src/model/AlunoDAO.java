@@ -7,59 +7,65 @@ import javax.swing.JOptionPane;
 import services.DbConn;
 
 /**
- * Essa classe é responsável por acessar o banco de dados e atualizar a tabela ALUNO
- * Comunicação com a classe Aluno
+ * Essa classe ï¿½ responsï¿½vel por acessar o banco de dados e atualizar a tabela ALUNO
+ * Comunicaï¿½ï¿½o com a classe Aluno
  * @author Simple Solution Devs
  */
 public class AlunoDAO {
 
 	/**
-	 * Atributos para realizar conexão com o banco de dados
+	 * Atributos para realizar conexï¿½o com o banco de dados
 	 */
 	private DbConn dbc = new DbConn();
 	private String men, sql;
 
 
-	
+
 	/**
-	 * Validar os atributos userAluno e senhaAluno para o usuário poder efetuar o login
+	 * Validar os atributos userAluno e senhaAluno para o usuï¿½rio poder efetuar o login
 	 * Tabela ALUNO
 	 * @param user - valor recebido para o atributo userAluno
 	 * @param senha - valor recebido para o atributo senhaAluno
 	 * @return valor boolean - TRUE (select retornado com sucesso) ou FALSE (select sem retorno ou cadastro inativo)
 	 */
-	public boolean efetuarLogin(String user, String senha) {
-		sql = "SELECT statusAluno FROM ALUNO WHERE userAluno=? AND senhaAluno=?";
+	public String efetuarLogin(String user, String senha) {
+		sql = "SELECT statusAluno, nomeAluno FROM ALUNO WHERE userAluno=? AND senhaAluno=?";
 		if (dbc.getConnection()) {
 			try {
 				dbc.st = dbc.con.prepareStatement(sql);
 				dbc.st.setString(1, user.trim());
 				dbc.st.setString(2, senha.trim());
 				dbc.rs = dbc.st.executeQuery();
-				String res = dbc.rs.toString();
-				if(res == "A") { 
-					return true;
+				while (dbc.rs.next()) {
+					System.out.println(dbc.rs.getString(1));
+					if (dbc.rs.getString(1).indexOf("A") != -1) {
+						return dbc.rs.getString(2);
+					}
+					else {
+						JOptionPane.showMessageDialog(null,"UsuÃ¡rio Inativo");
+						return null;
+					}
 				}
-				else {
-					JOptionPane.showMessageDialog(null,"Usuário inativo", "Login Aluno", 1);
-					return false; 
+				if (dbc.rs.getRow()==0) {
+					JOptionPane.showMessageDialog(null,"UsuÃ¡rio ou Senha invÃ¡lidos ");
+					return null;
 				}
 			}
 			catch (SQLException e) {
 				JOptionPane.showMessageDialog(null,e, "Falha", 1);
-				return false;
+				return null;
 			}
 			finally {
 				dbc.close();
 			}
 		}
-		return false;
+		return null;
 	}
-	
-	
+
+
 
 	/**
-	 * Método responsável por retornar uma lista com o registro de todos os alunos
+	 * Mï¿½todo responsï¿½vel por retornar uma lista com o registro de todos os alunos
 	 * @return listaAluno - lista de alunos (array)
 	 */
 	public Aluno[] consultarTodos() {
@@ -105,19 +111,20 @@ public class AlunoDAO {
 
 
 	/**
-	 * Método responsável por retornar um registro de acordo com o código fornecido
+	 * Mï¿½todo responsï¿½vel por retornar um registro de acordo com o cï¿½digo fornecido
 	 * Tabela ALUNO
-	 * @param aluno - objeto instânciado da classe Aluno
+	 * @param aluno - objeto instï¿½nciado da classe Aluno
 	 * @return aluno 
 	 */
 	public Aluno consultar(Aluno aluno) {
 		sql = "SELECT * FROM ALUNO WHERE codAluno=?;";
 		if (dbc.getConnection()) {
 			try {
-				if (dbc.getConnection()) {
-					dbc.st = dbc.con.prepareStatement(sql);
-					dbc.st.setInt(1, aluno.getCodAluno());
-					dbc.rs = dbc.st.executeQuery();
+
+				dbc.st = dbc.con.prepareStatement(sql);
+				dbc.st.setInt(1, aluno.getCodAluno());
+				dbc.rs = dbc.st.executeQuery();
+				while (dbc.rs.next()) {
 					aluno.setNomeAluno(dbc.rs.getString(2));
 					aluno.setNascAluno(dbc.rs.getDate(3));
 					aluno.setRgAluno(dbc.rs.getString(4));
@@ -128,9 +135,9 @@ public class AlunoDAO {
 					aluno.setSenhaAluno(dbc.rs.getString(9));
 					aluno.setStatusAluno(dbc.rs.getString(10));
 					aluno.setCodResp(dbc.rs.getInt(11));
-				}			
+				}
 			} 
-			catch (SQLException e) {
+			catch (SQLException e) {				
 				aluno = null;
 			} 
 			finally {
@@ -143,18 +150,20 @@ public class AlunoDAO {
 
 
 	/**
-	 * Método responsável por retornar o próximo número do índice no banco de dados
+	 * Mï¿½todo responsï¿½vel por retornar o prï¿½ximo nï¿½mero do ï¿½ndice no banco de dados
 	 * Tabela ALUNO
-	 * @return r - valor do próximo índice
+	 * @return r - valor do prï¿½ximo ï¿½ndice
 	 */
 	public int proximoId() {
-		sql = "SELECT MAX('codAluno') FROM ALUNO;";
+		sql = "SELECT MAX(codAluno) FROM ALUNO;";
 		int r = 0;
 		if(dbc.getConnection()) {
 			try {
 				dbc.st = dbc.con.prepareStatement(sql);
 				dbc.rs = dbc.st.executeQuery();
-				r = dbc.rs.getInt(1)+1;
+				while(dbc.rs.next()) {
+					r = dbc.rs.getInt(1)+1;
+				}
 			}
 			catch (SQLException e) {
 				r = -1;
@@ -169,9 +178,9 @@ public class AlunoDAO {
 
 
 	/**
-	 * Método responsável por atualizar o status de algum registro
+	 * Mï¿½todo responsï¿½vel por atualizar o status de algum registro
 	 * Tabela ALUNO
-	 * @param aluno - objeto instânciado da classe Aluno
+	 * @param aluno - objeto instï¿½nciado da classe Aluno
 	 * @return men - mensagem de aviso
 	 */
 	public String ativarInativar(Aluno aluno) {
@@ -202,9 +211,9 @@ public class AlunoDAO {
 
 
 	/**
-	 * Método responsável por inserir um novo registro ou atualizar um registro existente
+	 * Mï¿½todo responsï¿½vel por inserir um novo registro ou atualizar um registro existente
 	 * Tabela ALUNO
-	 * @param aluno - objeto instânciado da classe Aluno
+	 * @param aluno - objeto instï¿½nciado da classe Aluno
 	 * @return men - mensagem de aviso
 	 */
 	public String inserirAtualizar(Aluno aluno) {

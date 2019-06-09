@@ -1,31 +1,32 @@
 package model;
 
 import java.sql.SQLException;
+import java.util.ArrayList;
 
 import services.DbConn;
 
 /**
- * Essa classe é responsável por acessar o banco de dados e atualizar a tabela ALUNO
- * Comunicação com a classe Aluno
+ * Essa classe ï¿½ responsï¿½vel por acessar o banco de dados e atualizar a tabela ALUNO
+ * Comunicaï¿½ï¿½o com a classe Aluno
  * @author Simple Solution Devs
  */
 public class ResponsavelDAO {
-	
+
 	/**
-	 * Atributos para realizar conexão com o banco de dados
+	 * Atributos para realizar conexï¿½o com o banco de dados
 	 */
 	private DbConn dbc = new DbConn();
 	private String men, sql;
-	
-	
-	
+
+
+
 	/**
-	 * Método responsável por retornar o próximo número do índice no banco de dados
+	 * Mï¿½todo responsï¿½vel por retornar o prï¿½ximo nï¿½mero do ï¿½ndice no banco de dados
 	 * Tabela RESPONSAVEL
-	 * @return r - valor do próximo índice
+	 * @return r - valor do prï¿½ximo ï¿½ndice
 	 */
 	public int proximoId() {
-		sql = "SELECT MAX('codResponsavel') FROM RESPONSAVEL;";
+		sql = "SELECT MAX(codResponsavel) FROM RESPONSAVEL;";
 		int r = 0;
 		if(dbc.getConnection()) {
 			try {
@@ -40,58 +41,53 @@ public class ResponsavelDAO {
 		}
 		return r;
 	}
-	
-	
+
+
 
 	/**
-	 * Método responsável por retornar uma lista com o registro de todos os responsáveis
+	 * Mï¿½todo responsï¿½vel por retornar uma lista com o registro de todos os responsï¿½veis
 	 * @return lista_responsaveis - lista de responsaveis (array)
 	 */
-	public Responsavel[] consultaTodos() {
+	public ArrayList<Responsavel> consultaTodos() {
 		sql = "SELECT * FROM RESPONSAVEL";
-		Responsavel[] lista_responsaveis = new Responsavel[] {null};
+		ArrayList<Responsavel> lista_responsaveis = new ArrayList<Responsavel>();
 		if (dbc.getConnection()) {
 			try {
-				if (dbc.getConnection()) {
-					dbc.st = dbc.con.prepareStatement(sql);
-					dbc.rs = dbc.st.executeQuery();
-					
-					//Bloco para contagem de registros
-					dbc.rs.last();
-					lista_responsaveis = new Responsavel[dbc.rs.getRow()];
-					dbc.rs.beforeFirst();
-					//Fim do bloco
-					
-					
-					int count=0;
-					while (dbc.rs.next()) {						
-						Responsavel responsavel = lista_responsaveis[count];
-						responsavel.setCodResp(dbc.rs.getInt(1));
-						responsavel.setNomeResp(dbc.rs.getString(2));
-						responsavel.setNascResp(dbc.rs.getDate(3));
-						responsavel.setRgResp(dbc.rs.getString(4));
-						responsavel.setCpfResp(dbc.rs.getString(5));
-						responsavel.setEmailResp(dbc.rs.getString(6));
-						responsavel.setTelResp(dbc.rs.getString(7));
-						responsavel.setStatusResp(dbc.rs.getString(8));
-						count++;
-					}
-				}			
+
+				dbc.st = dbc.con.prepareStatement(sql);
+				dbc.rs = dbc.st.executeQuery();
+
+				while (dbc.rs.next()) {						
+					Responsavel responsavel = new Responsavel();
+					responsavel.setCodResp(dbc.rs.getInt(1));
+					responsavel.setNomeResp(dbc.rs.getString(2));
+					responsavel.setNascResp(dbc.rs.getDate(3));
+					responsavel.setRgResp(dbc.rs.getString(4));
+					responsavel.setCpfResp(dbc.rs.getString(5));
+					responsavel.setEmailResp(dbc.rs.getString(6));
+					responsavel.setTelResp(dbc.rs.getString(7));
+					responsavel.setStatusResp(dbc.rs.getString(8));
+					lista_responsaveis.add(responsavel);
+				}
+
 			} catch (SQLException e) {
+				System.out.println(e);
 				lista_responsaveis = null;
 			} finally {
 				dbc.close();
 			}
 		}
+		System.out.println(lista_responsaveis);
+
 		return lista_responsaveis;
 	}
-	
-	
+
+
 
 	/**
-	 * Método responsável por retornar um registro de acordo com o código fornecido
+	 * Mï¿½todo responsï¿½vel por retornar um registro de acordo com o cï¿½digo fornecido
 	 * Tabela RESPONSAVEL
-	 * @param responsavel - objeto instânciado da classe Aluno
+	 * @param responsavel - objeto instï¿½nciado da classe Aluno
 	 * @return responsavel 
 	 */
 	public Responsavel consulta(Responsavel responsavel) {
@@ -102,15 +98,18 @@ public class ResponsavelDAO {
 					dbc.st = dbc.con.prepareStatement(sql);
 					dbc.st.setInt(1, responsavel.getCodResp());
 					dbc.rs = dbc.st.executeQuery();
-					responsavel.setNomeResp(dbc.rs.getString(2));
-					responsavel.setNascResp(dbc.rs.getDate(3));
-					responsavel.setRgResp(dbc.rs.getString(4));
-					responsavel.setCpfResp(dbc.rs.getString(5));
-					responsavel.setEmailResp(dbc.rs.getString(6));
-					responsavel.setTelResp(dbc.rs.getString(7));
-					responsavel.setStatusResp(dbc.rs.getString(8));
+					while (dbc.rs.next()) {
+						responsavel.setNomeResp(dbc.rs.getString(2));
+						responsavel.setNascResp(dbc.rs.getDate(3));
+						responsavel.setRgResp(dbc.rs.getString(4));
+						responsavel.setCpfResp(dbc.rs.getString(5));
+						responsavel.setEmailResp(dbc.rs.getString(6));
+						responsavel.setTelResp(dbc.rs.getString(7));
+						responsavel.setStatusResp(dbc.rs.getString(8));
+					}
 				}			
 			} catch (SQLException e) {
+				System.out.println(e);
 				responsavel = null;
 			} finally {
 				dbc.close();
@@ -118,13 +117,13 @@ public class ResponsavelDAO {
 		}
 		return responsavel;
 	}
-	
-	
-	
+
+
+
 	/**
-	 * Método responsável por atualizar o status de algum registro
+	 * Mï¿½todo responsï¿½vel por atualizar o status de algum registro
 	 * Tabela RESPONSAVEL
-	 * @param responsavel - objeto instânciado da classe Responsavel
+	 * @param responsavel - objeto instï¿½nciado da classe Responsavel
 	 * @return men - mensagem de aviso
 	 */
 	public String ativaInativa(Responsavel responsavel) {
@@ -148,13 +147,13 @@ public class ResponsavelDAO {
 		}
 		return men;
 	}
-	
-	
-	
+
+
+
 	/**
-	 * Método responsável por inserir um novo registro ou atualizar um registro existente
+	 * Mï¿½todo responsï¿½vel por inserir um novo registro ou atualizar um registro existente
 	 * Tabela RESPONSAVEL
-	 * @param responsavel - objeto instânciado da classe Responsavel
+	 * @param responsavel - objeto instï¿½nciado da classe Responsavel
 	 * @return men - mensagem de aviso
 	 */
 	public String insereAtualiza(Responsavel responsavel) {
@@ -173,17 +172,17 @@ public class ResponsavelDAO {
 				dbc.rs = dbc.st.executeQuery();
 			} catch (SQLException e) {
 				sql = "UPDATE RESPONSAVEL SET nomeResp=?"
-											+ "nascRes=?"
-											+ "rgResp=?"
-											+ "cpfResp=?"
-											+ "emailResp=?"
-											+ "telResp=?"
-											+ "statusResp=?"
-				+ "WHERE codResp=?";
+						+ "nascRes=?"
+						+ "rgResp=?"
+						+ "cpfResp=?"
+						+ "emailResp=?"
+						+ "telResp=?"
+						+ "statusResp=?"
+						+ "WHERE codResp=?";
 				if (dbc.getConnection()) {
 					try {
 						dbc.st = dbc.con.prepareStatement(sql);
-						
+
 						dbc.st.setString(1, responsavel.getNomeResp());
 						dbc.st.setDate(2, responsavel.getNascResp());
 						dbc.st.setString(3, responsavel.getRgResp());
@@ -191,7 +190,7 @@ public class ResponsavelDAO {
 						dbc.st.setString(5, responsavel.getEmailResp());
 						dbc.st.setString(6, responsavel.getTelResp());
 						dbc.st.setString(7, responsavel.getStatusResp()); 
-						
+
 						dbc.st.setInt(8, responsavel.getCodResp());
 						dbc.rs = dbc.st.executeQuery();
 					} catch (SQLException e2) {
@@ -199,7 +198,7 @@ public class ResponsavelDAO {
 					}
 
 				}				
-				
+
 			}finally {
 				dbc.close();
 			}

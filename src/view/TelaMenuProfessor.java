@@ -22,11 +22,18 @@ public class TelaMenuProfessor {
 	 * Open the window.
 	 * @wbp.parser.entryPoint
 	 */
-	public void open() {
+	public void open(String professor) {
 		Display display = Display.getDefault();
-		createContents();
-		shlSimplesolutionAluno.setLayout(new FillLayout());
+		
+		shlSimplesolutionAluno = new Shell();
+		shlSimplesolutionAluno.setMaximized(true);
+		shlSimplesolutionAluno.setText("SimpleSolution - "+ professor);
+		
 		Menu menu = new Menu(shlSimplesolutionAluno, SWT.BAR);
+		shlSimplesolutionAluno.setMenuBar(menu);
+		
+		shlSimplesolutionAluno.setLayout(new FillLayout());
+
 		shlSimplesolutionAluno.setMenuBar(menu);
 		shlSimplesolutionAluno.open();
 		shlSimplesolutionAluno.layout();
@@ -78,12 +85,7 @@ public class TelaMenuProfessor {
 	 * Create contents of the window.
 	 */
 	protected void createContents() {
-		shlSimplesolutionAluno = new Shell();
-		shlSimplesolutionAluno.setSize(450, 300);
-		shlSimplesolutionAluno.setText("SimpleSolution - Aluno");
-		
-		Menu menu = new Menu(shlSimplesolutionAluno, SWT.BAR);
-		shlSimplesolutionAluno.setMenuBar(menu);
+
 
 	}
 }

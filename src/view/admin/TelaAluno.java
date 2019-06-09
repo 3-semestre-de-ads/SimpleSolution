@@ -1,8 +1,13 @@
 package view.admin;
 
 import java.sql.ResultSet;
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.Iterator;
 
+import javax.swing.JOptionPane;
 import javax.swing.table.DefaultTableModel;
+import javax.swing.table.TableModel;
 
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.widgets.Button;
@@ -17,12 +22,18 @@ import org.eclipse.swt.widgets.DateTime;
 import org.eclipse.ui.forms.widgets.FormToolkit;
 
 import model.Aluno;
+import model.AlunoDAO;
 import model.Responsavel;
+import model.ResponsavelDAO;
 
+import org.eclipse.swt.events.MouseEvent;
+import org.eclipse.swt.events.MouseListener;
 import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;
+import org.eclipse.swt.events.SelectionListener;
 import org.eclipse.swt.events.VerifyEvent;
 import org.eclipse.swt.events.VerifyListener;
+import org.eclipse.swt.internal.DPIUtil;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.widgets.TableColumn;
 import org.eclipse.swt.widgets.TableItem;
@@ -36,11 +47,6 @@ public class TelaAluno {
 	private Text txbRg;
 	private Text txbCpf;
 	private Text txbTelefone;
-	private Text txbEndereco;
-	private Text txbBairro;
-	private Text txbCidade;
-	private Text txbNumero;
-	private Text txbEstado;
 	private Text txbLogin;
 	private Text txbSenha;
 	private Text txbCodResp;
@@ -48,20 +54,77 @@ public class TelaAluno {
 	private Table tbTurmCad;
 	private final FormToolkit formToolkit = new FormToolkit(Display.getDefault());
 	private Table tblResponsavel;
+	private DateTime dtDatNasc;
 	
+	private void populaResponsavel() {		
+		ResponsavelDAO dao = new ResponsavelDAO();
+		ArrayList<Responsavel> r = dao.consultaTodos();
+		TableItem tbi_novo = new TableItem(tblResponsavel, SWT.NONE);
+		String[] novo = {"" , "<<Novo Responsavel>>"};
+		tbi_novo.setText(novo);
 
+		for (int i = 0; i < r.size(); i++) {
+			
+			TableItem tbi = new TableItem(tblResponsavel, SWT.NONE);
+			String[] valores = {Integer.toString(r.get(i).getCodResp()), 
+								r.get(i).getNomeResp()};
+ 			tbi.setText(valores);
+		}		
+	}
+	
+	private void populaAluno(Aluno aluno) {
+		txbCodigo.setText(Integer.toString(aluno.getCodAluno()));
+		txbNome.setText(aluno.getNomeAluno());
+		txbEmail.setText(aluno.getEmailAluno());
+		txbRg.setText(aluno.getRgAluno());
+		txbCpf.setText(aluno.getCpfAluno());
+		txbTelefone.setText(aluno.getTelAluno());
+		txbLogin.setText(aluno.getUserAluno());
+		txbSenha.setText(aluno.getSenhaAluno());
+		txbCodResp.setText(Integer.toString(aluno.getCodResp()));
+		dtDatNasc.getParent().layout();
+
+
+
+	}
+	private Aluno populaClasse() {
+		Aluno aln = new Aluno();
+		
+		aln.setCodAluno(Integer.parseInt(txbCodigo.getText()));
+		aln.setNomeAluno(txbNome.getText());
+		aln.setEmailAluno(txbEmail.getText());
+		aln.setRgAluno(txbRg.getText());
+		aln.setCpfAluno(txbCpf.getText());
+		aln.setTelAluno(txbTelefone.getText());
+		aln.setSenhaAluno(txbSenha.getText());
+		aln.setCodResp(Integer.parseInt(txbCodResp.getText()));
+		return aln;
+	}
+	
+	private void novoAluno() {
+		shlAluno.setText("Aluno - Novo");
+		AlunoDAO dao = new AlunoDAO();
+		txbCodigo.setText(Integer.toString(dao.proximoId()));
+		txbLogin.setText(String.format("ALN%05d", dao.proximoId()));
+	}
 
 
 	/**
 	 * Open the window.
 	 * @wbp.parser.entryPoint
 	 */
-	public void open() {
+	public void open(Aluno aluno) {
 		Display display = Display.getDefault();
 		createContents();
+		if (aluno == null) {
+			novoAluno();
+		}else {
+			populaAluno(aluno);
+		}
+
 		shlAluno.open();
 		shlAluno.layout();	
-		
+		populaResponsavel();
 		while (!shlAluno.isDisposed()) {
 			if (!display.readAndDispatch()) {
 				display.sleep();
@@ -74,8 +137,7 @@ public class TelaAluno {
 	 */
 	protected void createContents() {
 		shlAluno = new Shell();
-		shlAluno.setSize(715, 742);
-		shlAluno.setText("Aluno - <cod_aluno>");
+		shlAluno.setSize(715, 742);		
 		
 		
 		Label label = new Label(shlAluno, SWT.NONE);
@@ -138,73 +200,7 @@ public class TelaAluno {
 		txbTelefone = new Text(shlAluno, SWT.BORDER);
 		txbTelefone.setBounds(10, 286, 133, 30);
 		
-		Label label_6 = new Label(shlAluno, SWT.NONE);
-		label_6.setText("Endereço");
-		label_6.setBounds(10, 384, 68, 20);
-		
-		txbEndereco = new Text(shlAluno, SWT.BORDER);
-		txbEndereco.setBounds(10, 410, 257, 30);
-		txbEndereco.addVerifyListener(new VerifyListener() {
-			
-			@Override
-			public void verifyText(VerifyEvent arg0) {
-				arg0.text = arg0.text.toUpperCase();
-				
-			}
-		});
-		
-		Label label_7 = new Label(shlAluno, SWT.NONE);
-		label_7.setText("Bairro");
-		label_7.setBounds(10, 446, 68, 20);
-		
-		txbBairro = new Text(shlAluno, SWT.BORDER);
-		txbBairro.setBounds(10, 472, 133, 30);
-		txbBairro.addVerifyListener(new VerifyListener() {
-			
-			@Override
-			public void verifyText(VerifyEvent arg0) {
-				arg0.text = arg0.text.toUpperCase();
-				
-			}
-		});
-		
-		Label label_8 = new Label(shlAluno, SWT.NONE);
-		label_8.setText("Cidade");
-		label_8.setBounds(148, 446, 68, 20);
-		
-		txbCidade = new Text(shlAluno, SWT.BORDER);
-		txbCidade.setBounds(152, 472, 137, 30);
-		txbCidade.addVerifyListener(new VerifyListener() {
-			
-			@Override
-			public void verifyText(VerifyEvent arg0) {
-				arg0.text = arg0.text.toUpperCase();
-				
-			}
-		});
-		
-		Label label_9 = new Label(shlAluno, SWT.NONE);
-		label_9.setText("Numero");
-		label_9.setBounds(273, 384, 68, 20);
-		
-		txbNumero = new Text(shlAluno, SWT.BORDER);
-		txbNumero.setBounds(273, 410, 77, 30);
-		
-		txbEstado = new Text(shlAluno, SWT.BORDER);
-		txbEstado.setBounds(295, 472, 55, 30);
-		txbEstado.addVerifyListener(new VerifyListener() {
-			
-			@Override
-			public void verifyText(VerifyEvent arg0) {
-				arg0.text = arg0.text.toUpperCase();
-				
-			}
-		});
-		
-		Label label_10 = new Label(shlAluno, SWT.NONE);
-		label_10.setText("Estado");
-		label_10.setBounds(296, 446, 68, 20);
-		
+
 		Group group = new Group(shlAluno, SWT.NONE);
 		group.setText("Sistema");
 		group.setBounds(374, 10, 185, 177);
@@ -222,7 +218,7 @@ public class TelaAluno {
 		label_12.setText("Senha");
 		label_12.setBounds(10, 72, 68, 20);
 		
-		txbSenha = new Text(group, SWT.BORDER);
+		txbSenha = new Text(group, SWT.PASSWORD);
 		txbSenha.setBounds(10, 98, 153, 30);
 		
 		Group grpResponsavl = new Group(shlAluno, SWT.NONE);
@@ -235,6 +231,7 @@ public class TelaAluno {
 		
 		txbCodResp = new Text(grpResponsavl, SWT.BORDER);
 		txbCodResp.setBounds(10, 36, 153, 30);
+		txbCodResp.setEnabled(false);
 		
 		Label label_14 = new Label(grpResponsavl, SWT.NONE);
 		label_14.setText("Nome");
@@ -242,17 +239,69 @@ public class TelaAluno {
 		
 		txbNomeResp = new Text(grpResponsavl, SWT.BORDER);
 		txbNomeResp.setBounds(10, 98, 312, 30);
+		txbNomeResp.setEnabled(false);
 		
-		Button button = new Button(grpResponsavl, SWT.NONE);
-		button.setText("Buscar Resp.");
-		button.setBounds(169, 36, 101, 34);
-		
+
 		tblResponsavel = new Table(grpResponsavl, SWT.BORDER | SWT.FULL_SELECTION);
 		tblResponsavel.setBounds(10, 134, 312, 154);
 		formToolkit.adapt(tblResponsavel);
 		formToolkit.paintBordersFor(tblResponsavel);
 		tblResponsavel.setHeaderVisible(true);
 		tblResponsavel.setLinesVisible(true);
+		tblResponsavel.addSelectionListener(new SelectionListener() {
+			
+			@Override
+			public void widgetSelected(SelectionEvent arg0) {
+				if (tblResponsavel.getSelectionIndex() != 0) {
+					TableItem[] selection  = tblResponsavel.getSelection();
+
+			        for (int i = 0; i < selection.length; i++) {
+			        	txbCodResp.setText(selection[i].getText(0));
+			        	txbNomeResp.setText(selection[i].getText(1));
+			        	
+			        }
+				}else {
+					txbCodResp.setText("");
+					txbNomeResp.setText("");
+				}				
+			}
+			
+			@Override
+			public void widgetDefaultSelected(SelectionEvent arg0) {
+				// TODO Auto-generated method stub
+				
+			}
+		});
+		tblResponsavel.addMouseListener(new MouseListener() {
+			
+			@Override
+			public void mouseUp(MouseEvent arg0) {
+				// TODO Auto-generated method stub
+				
+			}
+			
+			@Override
+			public void mouseDown(MouseEvent arg0) {
+				// TODO Auto-generated method stub
+				
+			}
+			
+			@Override
+			public void mouseDoubleClick(MouseEvent arg0) {
+				TelaResponsavel tela = new TelaResponsavel();
+				Responsavel resp = new Responsavel();
+				
+				if (tblResponsavel.isSelected(0)) {
+					tela.open(null);
+				}else {
+					resp.setCodResp(Integer.parseInt(txbCodResp.getText().trim()));
+					tela.open(resp);
+				}
+
+
+				
+			}
+		});
 		
 		TableColumn tblclmnCodResp = new TableColumn(tblResponsavel, SWT.NONE);
 		tblclmnCodResp.setWidth(100);
@@ -263,18 +312,7 @@ public class TelaAluno {
 		tblclmnNomeResp.setText("Nome Resp");
 		
 		
-		Button btnAddResponsavel = new Button(grpResponsavl, SWT.NONE);
-		btnAddResponsavel.addSelectionListener(new SelectionAdapter() {
-			@Override
-			public void widgetSelected(SelectionEvent e) {
-				TelaResponsavel tela = new TelaResponsavel();
-				tela.open();
-			}
-		});
-		btnAddResponsavel.setText("+");
-		btnAddResponsavel.setBounds(276, 36, 43, 34);
-		formToolkit.adapt(btnAddResponsavel, true, true);
-		
+
 		Label label_15 = new Label(shlAluno, SWT.NONE);
 		label_15.setText("Data de Nascimento");
 		label_15.setBounds(149, 195, 178, 20);
@@ -303,6 +341,22 @@ public class TelaAluno {
 		Button btnSalvar = new Button(shlAluno, SWT.NONE);
 		btnSalvar.setBounds(507, 660, 95, 34);
 		btnSalvar.setText("Salvar");
+		btnSalvar.addSelectionListener(new SelectionListener() {
+			
+			@Override
+			public void widgetSelected(SelectionEvent arg0) {
+				// TODO Auto-generated method stub
+				AlunoDAO dao = new AlunoDAO();
+				Aluno salvar = populaClasse();
+				dao.inserirAtualizar(salvar);
+			}
+			
+			@Override
+			public void widgetDefaultSelected(SelectionEvent arg0) {
+				// TODO Auto-generated method stub
+				
+			}
+		});
 		
 		Button btnCancelar = new Button(shlAluno, SWT.NONE);
 		btnCancelar.addSelectionListener(new SelectionAdapter() {
@@ -314,8 +368,9 @@ public class TelaAluno {
 		btnCancelar.setText("Cancelar");
 		btnCancelar.setBounds(608, 660, 95, 34);
 		
-		DateTime dtDatNasc = new DateTime(shlAluno, SWT.BORDER | SWT.CALENDAR | SWT.SHORT);
+		dtDatNasc = new DateTime(shlAluno, SWT.BORDER | SWT.CALENDAR | SWT.SHORT);
 		dtDatNasc.setBounds(149, 221, 201, 157);
+
 	}
 	
 

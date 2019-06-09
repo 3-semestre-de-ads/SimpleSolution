@@ -5,6 +5,9 @@ import org.eclipse.swt.widgets.Shell;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.widgets.Text;
+
+import model.Turma;
+
 import org.eclipse.swt.widgets.DateTime;
 import org.eclipse.swt.widgets.Group;
 import org.eclipse.swt.widgets.Button;
@@ -26,15 +29,31 @@ public class TelaTurma {
 	private Text text;
 	private Text text_1;
 
-
+	private void novaTurma() {
+		table.setEnabled(false);
+		populaTabela();
+	}
+	private void populaTurma() {
+		text.setEnabled(false);
+		text_1.setEnabled(false);
+		populaTabela();
+	}
+	private void populaTabela() {
+		
+	}
 
 	/**
 	 * Open the window.
 	 * @wbp.parser.entryPoint
 	 */
-	public void open() {
+	public void open(Turma turma) {
 		Display display = Display.getDefault();
 		createContents();
+		if (turma == null) {
+			novaTurma();
+		}else {
+			populaTurma();
+		}
 		shlTurma.open();
 		shlTurma.layout();
 		while (!shlTurma.isDisposed()) {

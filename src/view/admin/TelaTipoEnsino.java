@@ -3,10 +3,20 @@ package view.admin;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.swt.widgets.Label;
+
+import java.util.ArrayList;
+
 import org.eclipse.swt.SWT;
+import org.eclipse.swt.events.SelectionEvent;
+import org.eclipse.swt.events.SelectionListener;
 import org.eclipse.swt.widgets.Text;
+
+import model.TipoEnsino;
+import model.TipoEnsinoDAO;
+
 import org.eclipse.swt.widgets.Table;
 import org.eclipse.swt.widgets.TableColumn;
+import org.eclipse.swt.widgets.TableItem;
 import org.eclipse.swt.widgets.Button;
 
 public class TelaTipoEnsino {
@@ -14,11 +24,41 @@ public class TelaTipoEnsino {
 	private Text text_1;
 	private Table table;
 	private Text text_2;
+	
+	private void novoTE() {
+		TipoEnsinoDAO dao = new TipoEnsinoDAO();
+		text.setText(Integer.toString(dao.proximoId()));
+		populaTabela();
+		table.setEnabled(false);
+	}
+	
+	private void populaTE(TipoEnsino te) {
+		populaTabela();
+		table.setEnabled(true);
+		text.setEnabled(false);
+		text_1.setEnabled(false);
+		text_2.setEnabled(false);
+	}
+	
+	private void populaTabela() {
+		TipoEnsinoDAO dao = new TipoEnsinoDAO();
+		ArrayList<TipoEnsino>r = dao.consultarTodos();
+
+		for (int i = 0; i < r.size(); i++) {
+			
+			TableItem tbi = new TableItem(table, SWT.NONE);
+			String[] valores = {Integer.toString(r.get(i).getCodTE()), "",
+								r.get(i).getNomeTE()};
+ 			tbi.setText(valores);
+		}	
+		
+	}
 
 	/**
 	 * Open the window.
 	 */
-	public void open() {
+	public void open(TipoEnsino te) {
+
 		Display display = Display.getDefault();
 		Shell shlTipoDeEnsino = new Shell();
 		shlTipoDeEnsino.setSize(449, 321);
@@ -44,6 +84,26 @@ public class TelaTipoEnsino {
 		table.setLinesVisible(true);
 		table.setHeaderVisible(true);
 		table.setBounds(10, 72, 424, 153);
+		table.addSelectionListener(new SelectionListener() {
+			
+			@Override
+			public void widgetSelected(SelectionEvent arg0) {
+				
+					TableItem[] selection  = table.getSelection();
+
+			        for (int i = 0; i < selection.length; i++) {
+			        	text.setText(selection[i].getText(0));
+			        	text_1.setText(selection[i].getText(2));
+			        	
+			        }				
+			}
+			
+			@Override
+			public void widgetDefaultSelected(SelectionEvent arg0) {
+				// TODO Auto-generated method stub
+				
+			}
+		});
 		
 		TableColumn tblclmnCodigo = new TableColumn(table, SWT.NONE);
 		tblclmnCodigo.setWidth(100);
@@ -52,7 +112,7 @@ public class TelaTipoEnsino {
 		
 		TableColumn tblclmnQtde = new TableColumn(table, SWT.NONE);
 		tblclmnQtde.setWidth(58);
-		tblclmnQtde.setText("Descrição");
+		tblclmnQtde.setText("Qtd");
 		tblclmnQtde.setMoveable(true);
 		
 		TableColumn tblclmnNome = new TableColumn(table, SWT.NONE);
@@ -79,11 +139,20 @@ public class TelaTipoEnsino {
 
 		shlTipoDeEnsino.open();
 		shlTipoDeEnsino.layout();
+		
+		if (te == null) {
+			novoTE();
+		}else {
+			populaTE(te);
+		}
+		
 		while (!shlTipoDeEnsino.isDisposed()) {
 			if (!display.readAndDispatch()) {
 				display.sleep();
 			}
 		}
+		
+		
 	}
 
 }

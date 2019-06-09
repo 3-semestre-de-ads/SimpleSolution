@@ -1,10 +1,12 @@
 package view;
 
 import java.io.InputStream;
+import view.admin.*;
 
 import javax.swing.ImageIcon;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
+import javax.swing.JOptionPane;
 
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.widgets.Display;
@@ -15,6 +17,7 @@ import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.custom.StackLayout;
 import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;
+import org.eclipse.swt.events.SelectionListener;
 import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.layout.FormLayout;
 import org.eclipse.swt.layout.FormData;
@@ -25,6 +28,13 @@ import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.wb.swt.SWTResourceManager;
 
+import model.Administrador;
+import model.Aluno;
+import model.AlunoDAO;
+import model.Idioma;
+import model.Professor;
+import model.TipoEnsino;
+import model.Turma;
 import view.admin.TelaAluno;
 
 import org.eclipse.swt.layout.GridData;
@@ -58,6 +68,20 @@ public class TelaMenuAdministrador {
 		 */
 		MenuItem itemSair = new MenuItem(menuArquivo, SWT.NONE);
 		itemSair.setText("Logoff");
+		itemSair.addSelectionListener(new SelectionListener() {
+			
+			@Override
+			public void widgetSelected(SelectionEvent arg0) {
+				shell.close();
+				
+			}
+			
+			@Override
+			public void widgetDefaultSelected(SelectionEvent arg0) {
+				// TODO Auto-generated method stub
+				
+			}
+		});
 		
 		/*
 		 * @Criando Menu Aluno
@@ -72,10 +96,47 @@ public class TelaMenuAdministrador {
 		 */
 		MenuItem itemCadAluno = new MenuItem(menuAluno, SWT.NONE);
 		itemCadAluno.setText("Cadastrar Aluno");
+		itemCadAluno.addSelectionListener(new SelectionListener() {
+			
+			@Override
+			public void widgetSelected(SelectionEvent arg0) {
+				TelaAluno tela = new TelaAluno();
+				tela.open(null);
+			}
+			
+			@Override
+			public void widgetDefaultSelected(SelectionEvent arg0) {
+				
+			}
+		});
 
 		
 		MenuItem itemConAluno = new MenuItem(menuAluno, SWT.NONE);
 		itemConAluno.setText("Consultar / Alterar Aluno");
+		itemConAluno.addSelectionListener(new SelectionListener() {
+			
+			@Override
+			public void widgetSelected(SelectionEvent arg0) {
+				String aluno = JOptionPane.showInputDialog("Digite o código do Aluno:");
+				if (aluno != "") {
+					AlunoDAO dao = new AlunoDAO();
+					Aluno a = new Aluno();
+					a.setCodAluno(Integer.parseInt(aluno));
+					a = dao.consultar(a);
+					if (a.getNomeAluno() != null) {
+						TelaAluno tela = new TelaAluno();
+						tela.open(a);
+					}
+
+				}
+			}
+			
+			@Override
+			public void widgetDefaultSelected(SelectionEvent arg0) {
+				// TODO Auto-generated method stub
+				
+			}
+		});
 
 		/*
 		 * Criando Menu Aulas
@@ -92,9 +153,31 @@ public class TelaMenuAdministrador {
 			Menu menuIdiomas = new Menu(itemIdioma);	
 			itemIdioma.setMenu(menuIdiomas);				
 				MenuItem cadIdioma = new MenuItem(menuIdiomas, SWT.PUSH);
-				cadIdioma.setText("Cadastrar");			
+				cadIdioma.setText("Cadastrar");	
+				cadIdioma.addSelectionListener(new SelectionListener() {
+					
+					@Override
+					public void widgetSelected(SelectionEvent arg0) {
+						TelaIdioma tela = new TelaIdioma();						
+						tela.open(null);
+						
+					}					
+					@Override
+					public void widgetDefaultSelected(SelectionEvent arg0) {}});
+				
 				MenuItem conIdioma = new MenuItem(menuIdiomas, SWT.PUSH);
 				conIdioma.setText("Consultar");
+				conIdioma.addSelectionListener(new SelectionListener() {
+					
+					@Override
+					public void widgetSelected(SelectionEvent arg0) {
+						TelaIdioma tela = new TelaIdioma();	
+						Idioma idioma = new Idioma();
+						tela.open(idioma);
+						
+					}					
+					@Override
+					public void widgetDefaultSelected(SelectionEvent arg0) {}});
 			/*
 			 * MenuIdiomas
 			 */
@@ -103,9 +186,40 @@ public class TelaMenuAdministrador {
 			Menu menuTurma = new Menu(itemTurma);	
 			itemTurma.setMenu(menuTurma);
 				MenuItem cadTurma = new MenuItem(menuTurma, SWT.PUSH);
-				cadTurma.setText("Cadastrar");		
+				cadTurma.setText("Cadastrar");
+				cadTurma.addSelectionListener(new SelectionListener() {
+					
+					@Override
+					public void widgetSelected(SelectionEvent arg0) {
+						TelaTurma tela = new TelaTurma();
+						tela.open(null);
+						
+					}
+					
+					@Override
+					public void widgetDefaultSelected(SelectionEvent arg0) {
+						// TODO Auto-generated method stub
+						
+					}
+				});
 				MenuItem conTurma = new MenuItem(menuTurma, SWT.PUSH);
 				conTurma.setText("Consultar");
+				conTurma.addSelectionListener(new SelectionListener() {
+					
+					@Override
+					public void widgetSelected(SelectionEvent arg0) {
+						TelaTurma tela = new TelaTurma();
+						Turma turma = new Turma();
+						tela.open(turma);
+						
+					}
+					
+					@Override
+					public void widgetDefaultSelected(SelectionEvent arg0) {
+						// TODO Auto-generated method stub
+						
+					}
+				});
 				
 			/*
 			 * Menu Tipo de Ensino
@@ -116,9 +230,37 @@ public class TelaMenuAdministrador {
 			itemTipoEnsino.setMenu(menuTe);
 				MenuItem cadTipoEnsino = new MenuItem(menuTe, SWT.PUSH);
 				cadTipoEnsino.setText("Cadastrar");
+				cadTipoEnsino.addSelectionListener(new SelectionListener() {
+					
+					@Override
+					public void widgetSelected(SelectionEvent arg0) {
+						TelaTipoEnsino tela = new TelaTipoEnsino();
+						tela.open(null);
+					}
+					
+					@Override
+					public void widgetDefaultSelected(SelectionEvent arg0) {
+						// TODO Auto-generated method stub
+						
+					}
+				});
 				MenuItem conTipoEnsino = new MenuItem(menuTe, SWT.PUSH);
 				conTipoEnsino.setText("Consultar");
-		
+				conTipoEnsino.addSelectionListener(new SelectionListener() {
+					
+					@Override
+					public void widgetSelected(SelectionEvent arg0) {
+						TelaTipoEnsino tela = new TelaTipoEnsino();
+						TipoEnsino TE = new TipoEnsino();
+						tela.open(TE);
+					}
+					
+					@Override
+					public void widgetDefaultSelected(SelectionEvent arg0) {
+						// TODO Auto-generated method stub
+						
+					}
+				});
 
 		/*
 		 * Menu Funcionários
@@ -137,8 +279,39 @@ public class TelaMenuAdministrador {
 			itemProfessor.setMenu(menuProfessor);
 				MenuItem cadProfessor = new MenuItem(menuProfessor, SWT.PUSH);
 				cadProfessor.setText("Cadastrar");
+				cadProfessor.addSelectionListener(new SelectionListener() {
+					
+					@Override
+					public void widgetSelected(SelectionEvent arg0) {
+						TelaProfessor tela = new TelaProfessor();
+						tela.open(null);
+						
+					}
+					
+					@Override
+					public void widgetDefaultSelected(SelectionEvent arg0) {
+						// TODO Auto-generated method stub
+						
+					}
+				});
 				MenuItem conProfessor = new MenuItem(menuProfessor, SWT.PUSH);
 				conProfessor.setText("Consultar");
+				conProfessor.addSelectionListener(new SelectionListener() {
+					
+					@Override
+					public void widgetSelected(SelectionEvent arg0) {
+						TelaProfessor tela = new TelaProfessor();
+						Professor professor = new Professor();
+						professor.setCodProf(Integer.parseInt(JOptionPane.showInputDialog("Digite o Codigo do Professor")));
+						tela.open(professor);						
+					}
+					
+					@Override
+					public void widgetDefaultSelected(SelectionEvent arg0) {
+						// TODO Auto-generated method stub
+						
+					}
+				});
 			
 			/*
 			 * Sub Menu Administrador
@@ -149,25 +322,41 @@ public class TelaMenuAdministrador {
 			itemAdm.setMenu(menuAdm);
 				MenuItem cadAdm = new MenuItem(menuAdm, SWT.PUSH);
 				cadAdm.setText("Cadastrar");
+				cadAdm.addSelectionListener(new SelectionListener() {
+					
+					@Override
+					public void widgetSelected(SelectionEvent arg0) {
+						TelaAdministrador tela = new TelaAdministrador();
+						tela.open(null);
+						
+					}
+					
+					@Override
+					public void widgetDefaultSelected(SelectionEvent arg0) {
+						// TODO Auto-generated method stub
+						
+					}
+				});
 				MenuItem conAdm = new MenuItem(menuAdm, SWT.PUSH);
 				conAdm.setText("Consultar");
+				conAdm.addSelectionListener(new SelectionListener() {
+					
+					@Override
+					public void widgetSelected(SelectionEvent arg0) {
+						Administrador admin = new Administrador();
+						TelaAdministrador tela = new TelaAdministrador();
+						tela.open(admin);
+						
+					}
+					
+					@Override
+					public void widgetDefaultSelected(SelectionEvent arg0) {
+						// TODO Auto-generated method stub
+						
+					}
+				});
 		
-		/*
-		 * @Criando Menu Financeiro
-		 */
-		MenuItem itemFinanceiro = new MenuItem(menu, SWT.CASCADE);
-		itemFinanceiro.setText("Financeiro");		
-		Menu menuFinanceiro= new Menu(itemFinanceiro);
-		itemFinanceiro.setMenu(menuFinanceiro);
-		
-		
-		/*
-		 * Criação de Submenus Financeiro
-		 */
-		MenuItem itemResumoMensalidades = new MenuItem(menuFinanceiro, SWT.NONE);
-		itemResumoMensalidades.setText("Mensalidades");
-		
-	    
+
 
 		while (!shell.isDisposed()) {
 			if (!display.readAndDispatch()) {
@@ -182,7 +371,7 @@ public class TelaMenuAdministrador {
 	protected void createContents(String usuario) {
 		shell = new Shell();
 		
-		shell.setSize(800, 600);
+		shell.setMaximized(true);
 		shell.setText("SimpleSolution - " + usuario);
 
 

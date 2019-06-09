@@ -5,6 +5,10 @@ import org.eclipse.swt.widgets.Shell;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.widgets.Text;
+
+import model.Responsavel;
+import model.ResponsavelDAO;
+
 import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Table;
 import org.eclipse.swt.widgets.TableColumn;
@@ -19,14 +23,34 @@ public class TelaResponsavel {
 	private Text txbTelefone;
 	private Text txbCpf;
 	private Table table;
+	
+	private void novoResp() {
+		shlResponsavl.setText("Responsavel - Novo");
+	}
+	
+	private void populaResp(Responsavel resp) {
+		ResponsavelDAO dao = new ResponsavelDAO();
+		resp = dao.consulta(resp);
+		txbCodigo.setText(Integer.toString(resp.getCodResp()));
+		txbNome.setText(resp.getNomeResp());
+		txbEmail.setText(resp.getEmailResp());
+		txbRg.setText(resp.getRgResp());
+		txbCpf.setText(resp.getCpfResp());
+		txbTelefone.setText(resp.getTelResp());
+	}
 
 
 	/**
 	 * Open the window.
 	 */
-	public void open() {
+	public void open(Responsavel responsavel) {
 		Display display = Display.getDefault();
 		createContents();
+		if (responsavel == null) {
+			novoResp();
+		}else {
+			populaResp(responsavel);
+		}
 		shlResponsavl.open();
 		shlResponsavl.layout();
 		while (!shlResponsavl.isDisposed()) {
@@ -42,7 +66,7 @@ public class TelaResponsavel {
 	protected void createContents() {
 		shlResponsavl = new Shell();
 		shlResponsavl.setSize(373, 529);
-		shlResponsavl.setText("Responsavél - <cod_responsavél>");
+		
 		
 		Label label = new Label(shlResponsavl, SWT.NONE);
 		label.setText("Código");

@@ -10,7 +10,7 @@ import javax.swing.JOptionPane;
 import services.DbConn;
 
 /**
- * Essa classe é responsável por receber e estabelecer os atributos referentes a Nota
+ * Essa classe ï¿½ responsï¿½vel por receber e estabelecer os atributos referentes a Nota
  * @author Simple Solution Devs
  */
 public class Nota {
@@ -25,76 +25,42 @@ public class Nota {
 	private int codAval;
 	
 	
-	
 	/**
-	 * Método construtor 1
-	 */
-	public Nota() {
-	}
-
-
-
-	//????
-	/**
-	 * Método construtor 2
-	 * @param codigo - valor do atributo codNota
-	 */
-	public Nota(String codigo) {
-		DbConn cdb = new DbConn();
-		ResultSet rs = cdb.consultaRegistro("SELECT * FROM NOTA WHERE codNota="+codigo+";");
-		try {
-			while (rs.next()) {
-				setCodNota(Integer.parseInt(rs.getString(1).toString()));
-				SimpleDateFormat format = new SimpleDateFormat("dd/MM/yyyy");				
-				setDataNota((Date)format.parse(rs.getString(3).toString()));
-				setValorNota(Double.parseDouble(rs.getString(4).toString()));
-				setCodMat(Integer.parseInt(rs.getString(1).toString()));
-				setCodAval(Integer.parseInt(rs.getString(1).toString()));
-			}
-		} 
-		catch (Exception e) {
-			// TODO: handle exception
-		}
-	}
-	
-	
-	
-	/**
-	 * Método responsável por retornar o valor do codNota
+	 * Mï¿½todo responsï¿½vel por retornar o valor do codNota
 	 * @return codNota - valor do atributo
 	 */
 	public int getCodNota() {
 		return codNota;
 	}
 	/**
-	 * Método responsável por estabelecer o valor de codNota e validar o mesmo
+	 * Mï¿½todo responsï¿½vel por estabelecer o valor de codNota e validar o mesmo
 	 * @param codNota - valor do atributo
 	 */
 	public void setCodNota(int codNota) {
 		try {
 			if(codNota == 0) {
-				JOptionPane.showMessageDialog(null, "O dado inserido deve ser maior que 0", "Código Nota", 1);
+				JOptionPane.showMessageDialog(null, "O dado inserido deve ser maior que 0", "Cï¿½digo Nota", 1);
 			}
 			else {
 				this.codNota = codNota;
 			}
 		}
 		catch(NumberFormatException e) {
-			JOptionPane.showMessageDialog(null, "O dado inserido deve ser um número", "Código Nota", 1);
+			JOptionPane.showMessageDialog(null, "O dado inserido deve ser um nï¿½mero", "Cï¿½digo Nota", 1);
 		}
 	}
 	
 	
 	
 	/**
-	 * Método responsável por retornar o valor do dataNota
+	 * Mï¿½todo responsï¿½vel por retornar o valor do dataNota
 	 * @return dataNota - valor do atributo
 	 */
 	public Date getDataNota() {
 		return dataNota;
 	}
 	/**
-	 * Método responsável por estabelecer o valor de dataNota e validar o mesmo
+	 * Mï¿½todo responsï¿½vel por estabelecer o valor de dataNota e validar o mesmo
 	 * @param dataNota - valor do atributo
 	 */
 	public void setDataNota(Date dataNota) {
@@ -113,16 +79,16 @@ public class Nota {
 	
 	
 	
-	//Verificação e select de acordo com o valor definido no codAval
+	//Verificaï¿½ï¿½o e select de acordo com o valor definido no codAval
 	/**
-	 * Método responsável por retornar o valor do valorNota
+	 * Mï¿½todo responsï¿½vel por retornar o valor do valorNota
 	 * @return valorNota - valor do atributo
 	 */
 	public double getValorNota() {
 		return valorNota;
 	}
 	/**
-	 * Método responsável por estabelecer o valor de valorNota e validar o mesmo
+	 * Mï¿½todo responsï¿½vel por estabelecer o valor de valorNota e validar o mesmo
 	 * @param valorNota - valor do atributo
 	 */
 	public void setValorNota(double valorNota) {
@@ -130,7 +96,7 @@ public class Nota {
 			this.valorNota = valorNota;
 		}
 		catch(NumberFormatException e) {
-			JOptionPane.showMessageDialog(null, "O dado inserido deve ser um número", "Valor Nota", 1);
+			JOptionPane.showMessageDialog(null, "O dado inserido deve ser um nï¿½mero", "Valor Nota", 1);
 		}
 	}
 	
@@ -138,27 +104,27 @@ public class Nota {
 	
 	//SELECT PARA VALIDAR codMat
 	/**
-	 * Método responsável por retornar o valor do codMat
+	 * Mï¿½todo responsï¿½vel por retornar o valor do codMat
 	 * @return codMat - valor do atributo
 	 */
 	public int getCodMat() {
 		return codMat;
 	}
 	/**
-	 * Método responsável por estabelecer o valor de codMat e validar o mesmo
+	 * Mï¿½todo responsï¿½vel por estabelecer o valor de codMat e validar o mesmo
 	 * @param codMat - valor do atributo
 	 */
 	public void setCodMat(int codMat) {
 		try {
 			if(codMat == 0) {
-				JOptionPane.showMessageDialog(null, "O dado inserido deve ser maior que 0", "Código Matrícula", 1);
+				JOptionPane.showMessageDialog(null, "O dado inserido deve ser maior que 0", "Cï¿½digo Matrï¿½cula", 1);
 			}
 			else {
 				this.codMat = codMat;
 			}
 		}
 		catch(NumberFormatException e) {
-			JOptionPane.showMessageDialog(null, "O dado inserido deve ser um número", "Código Matrícula", 1);
+			JOptionPane.showMessageDialog(null, "O dado inserido deve ser um nï¿½mero", "Cï¿½digo Matrï¿½cula", 1);
 		}
 	}
 	
@@ -166,27 +132,27 @@ public class Nota {
 	
 	//SELECT PARA VALIDAR codAval
 	/**
-	 * Método responsável por retornar o valor do codAval
+	 * Mï¿½todo responsï¿½vel por retornar o valor do codAval
 	 * @return codAval - valor do atributo
 	 */
 	public int getCodAval() {
 		return codAval;
 	}
 	/**
-	 * Método responsável por estabelecer o valor de cpfAluno e validar o mesmo
+	 * Mï¿½todo responsï¿½vel por estabelecer o valor de cpfAluno e validar o mesmo
 	 * @param cpfAluno - valor do atributo
 	 */
 	public void setCodAval(int codAval) {
 		try {
 			if(codAval == 0) {
-				JOptionPane.showMessageDialog(null, "O dado inserido deve ser maior que 0", "Código Avaliação", 1);
+				JOptionPane.showMessageDialog(null, "O dado inserido deve ser maior que 0", "Cï¿½digo Avaliaï¿½ï¿½o", 1);
 			}
 			else {
 				this.codAval = codAval;
 			}
 		}
 		catch(NumberFormatException e) {
-			JOptionPane.showMessageDialog(null, "O dado inserido deve ser um número", "Código Avaliação", 1);
+			JOptionPane.showMessageDialog(null, "O dado inserido deve ser um nï¿½mero", "Cï¿½digo Avaliaï¿½ï¿½o", 1);
 		}
 	}
 	

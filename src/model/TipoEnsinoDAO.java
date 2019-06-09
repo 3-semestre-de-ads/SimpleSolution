@@ -1,20 +1,21 @@
 package model;
 
 import java.sql.SQLException;
+import java.util.ArrayList;
 
 import javax.swing.JOptionPane;
 
 import services.DbConn;
 
 /**
- * Essa classe é responsável por acessar o banco de dados e atualizar a tabela TIPOENSINO
- * Comunicação com a classe TipoEnsino
+ * Essa classe ï¿½ responsï¿½vel por acessar o banco de dados e atualizar a tabela TIPOENSINO
+ * Comunicaï¿½ï¿½o com a classe TipoEnsino
  * @author Simple Solution Devs
  */
 public class TipoEnsinoDAO {
 
 	/**
-	 * Atributos para realizar conexão com o banco de dados
+	 * Atributos para realizar conexï¿½o com o banco de dados
 	 */
 	private DbConn dbc = new DbConn();
 	private String men, sql;
@@ -22,27 +23,25 @@ public class TipoEnsinoDAO {
 
 	
 	/**
-	 * Método responsável por retornar uma lista com o registro de todos os tipos de ensino
+	 * Mï¿½todo responsï¿½vel por retornar uma lista com o registro de todos os tipos de ensino
 	 * @return listaTE - lista de tipo de ensino (array)
 	 */
-	public TipoEnsino[] consultarTodos() {
+	public ArrayList<TipoEnsino> consultarTodos() {
 		sql = "SELECT * FROM TIPOENSINO;";
-		TipoEnsino[] listaTE = new TipoEnsino[] {null};
+		ArrayList<TipoEnsino> listaTE = new ArrayList<TipoEnsino>();
 		if (dbc.getConnection()) {
 			try {
 				if (dbc.getConnection()) {
 					dbc.st = dbc.con.prepareStatement(sql);
 					dbc.rs = dbc.st.executeQuery();
-					dbc.rs.last();
-					listaTE = new TipoEnsino[dbc.rs.getRow()];
-					dbc.rs.beforeFirst();
-					int count=0;
+					
 					while (dbc.rs.next()) { 
-						TipoEnsino te = listaTE[count];
+						TipoEnsino te = new TipoEnsino();
 						te.setCodTE(dbc.rs.getInt(1));
 						te.setNomeTE(dbc.rs.getString(2));
 						te.setQtdAlunoTE(dbc.rs.getInt(3));
-						count++;
+						listaTE.add(te);
+						
 					}									
 				}			
 			} 
@@ -60,9 +59,9 @@ public class TipoEnsinoDAO {
 
 
 	/**
-	 * Método responsável por retornar um registro de acordo com o código fornecido
+	 * Mï¿½todo responsï¿½vel por retornar um registro de acordo com o cï¿½digo fornecido
 	 * Tabela TIPOENSINO
-	 * @param te - objeto instânciado da classe Nota
+	 * @param te - objeto instï¿½nciado da classe Nota
 	 * @return te
 	 */
 	public TipoEnsino consultar(TipoEnsino te) {
@@ -73,9 +72,7 @@ public class TipoEnsinoDAO {
 					dbc.st = dbc.con.prepareStatement(sql);
 					dbc.st.setInt(1, te.getCodTE());
 					dbc.rs = dbc.st.executeQuery();
-					//mensalidade.setNomeAluno(dbc.rs.getString(2));
-					//mensalidade.setNomeAluno(dbc.rs.getString(3));
-					//mensaldiade.setNascAluno(dbc.rs.getDate(4));
+
 				}			
 			} 
 			catch (SQLException e) {
@@ -91,18 +88,21 @@ public class TipoEnsinoDAO {
 
 
 	/**
-	 * Método responsável por retornar o próximo número do índice no banco de dados
+	 * Mï¿½todo responsï¿½vel por retornar o prï¿½ximo nï¿½mero do ï¿½ndice no banco de dados
 	 * Tabela TIPOENSINO
-	 * @return r - valor do próximo índice
+	 * @return r - valor do prï¿½ximo ï¿½ndice
 	 */
 	public int proximoId() {
-		sql = "SELECT MAX('codTE') FROM TIPOENSINO;";
+		sql = "SELECT MAX(codTE) FROM TIPOENSINO;";
 		int r = 0;
 		if(dbc.getConnection()) {
 			try {
 				dbc.st = dbc.con.prepareStatement(sql);
 				dbc.rs = dbc.st.executeQuery();
-				r = dbc.rs.getInt(1)+1;
+				while (dbc.rs.next()) {
+					r = dbc.rs.getInt(1)+1;
+				}
+				
 			}
 			catch (SQLException e) {
 				r = -1;
@@ -117,9 +117,9 @@ public class TipoEnsinoDAO {
 
 	
 	/**
-	 * Método responsável por inserir um novo registro ou atualizar um registro existente
+	 * Mï¿½todo responsï¿½vel por inserir um novo registro ou atualizar um registro existente
 	 * Tabela TIPOENSINO
-	 * @param te - objeto instânciado da classe TipoEnsino
+	 * @param te - objeto instï¿½nciado da classe TipoEnsino
 	 * @return men - mensagem de aviso
 	 */
 	public String inserirAtualizar(TipoEnsino te) {

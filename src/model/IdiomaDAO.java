@@ -1,20 +1,21 @@
 package model;
 
 import java.sql.SQLException;
+import java.util.ArrayList;
 
 import javax.swing.JOptionPane;
 
 import services.DbConn;
 
 /**
- * Essa classe é responsável por acessar o banco de dados e atualizar a tabela IDIOMA
- * Comunicação com a classe Idioma
+ * Essa classe ï¿½ responsï¿½vel por acessar o banco de dados e atualizar a tabela IDIOMA
+ * Comunicaï¿½ï¿½o com a classe Idioma
  * @author Simple Solution Devs
  */
 public class IdiomaDAO {
 
 	/**
-	 * Atributos para realizar conexão com o banco de dados
+	 * Atributos para realizar conexï¿½o com o banco de dados
 	 */
 	private DbConn dbc = new DbConn();
 	private String men, sql;
@@ -22,18 +23,21 @@ public class IdiomaDAO {
 	
 	
 	/**
-	 * Método responsável por retornar o próximo número do índice no banco de dados
+	 * Mï¿½todo responsï¿½vel por retornar o prï¿½ximo nï¿½mero do ï¿½ndice no banco de dados
 	 * Tabela IDIOMA
-	 * @return r - valor do próximo índice
+	 * @return r - valor do prï¿½ximo ï¿½ndice
 	 */
 	public int proximoId() {
-		sql = "SELECT MAX('codIdioma') FROM IDIOMA;";
+		sql = "SELECT MAX(codIdioma) FROM IDIOMA;";
 		int r = 0;
 		if(dbc.getConnection()) {
 			try {
 				dbc.st = dbc.con.prepareStatement(sql);
 				dbc.rs = dbc.st.executeQuery();
-				r = dbc.rs.getInt(1)+1;
+				while (dbc.rs.next()) {
+					r = dbc.rs.getInt(1)+1;
+				}
+				
 			} catch (SQLException e) {
 				r = -1;
 			} finally {
@@ -46,27 +50,25 @@ public class IdiomaDAO {
 	
 	
 	/**
-	 * Método responsável por retornar uma lista com o registro de todos os idiomas
+	 * Mï¿½todo responsï¿½vel por retornar uma lista com o registro de todos os idiomas
 	 * @return lista_idioma - lista de idiomas (array)
 	 */
-	public Idioma[] consultarTodos() {
+	public ArrayList<Idioma> consultarTodos() {
 		sql = "SELECT * FROM IDIOMA;";
-		Idioma[] listaIdioma = new Idioma[] {null};
+		ArrayList<Idioma> listaIdioma = new ArrayList<Idioma>();
 		if (dbc.getConnection()) {
 			try {
 				if (dbc.getConnection()) {
 					dbc.st = dbc.con.prepareStatement(sql);
 					dbc.rs = dbc.st.executeQuery();
-					dbc.rs.last();
-					listaIdioma = new Idioma[dbc.rs.getRow()];
-					dbc.rs.beforeFirst();
-					int count = 0;
+
+
 					while (dbc.rs.next()) { 
-						Idioma idioma = listaIdioma[count];
+						Idioma idioma = new Idioma();
 						idioma.setCodIdioma(dbc.rs.getInt(1));
 						idioma.setNomeIdioma(dbc.rs.getString(2));
 						idioma.setNivelIdioma(dbc.rs.getString(3));
-						count ++;
+						listaIdioma.add(idioma);
 					}									
 				}			
 			} 
@@ -84,9 +86,9 @@ public class IdiomaDAO {
 	
 	
 	/**
-	 * Método responsável por retornar um registro de acordo com o código fornecido
+	 * Mï¿½todo responsï¿½vel por retornar um registro de acordo com o cï¿½digo fornecido
 	 * Tabela IDIOMA
-	 * @param idioma - objeto instânciado da classe Idioma
+	 * @param idioma - objeto instï¿½nciado da classe Idioma
 	 * @return idioma 
 	 */
 	public Idioma consultar(Idioma idioma) {
@@ -114,9 +116,9 @@ public class IdiomaDAO {
 	
 	
 	/**
-	 * Método responsável por inserir um novo registro ou atualizar um registro existente
+	 * Mï¿½todo responsï¿½vel por inserir um novo registro ou atualizar um registro existente
 	 * Tabela IDIOMA
-	 * @param idioma - objeto instânciado da classe Idioma
+	 * @param idioma - objeto instï¿½nciado da classe Idioma
 	 * @return men - mensagem de aviso
 	 */
 	public String inserirAtualizar(Idioma idioma) {
