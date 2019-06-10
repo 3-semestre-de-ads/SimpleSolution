@@ -31,11 +31,21 @@ import org.eclipse.swt.events.MouseListener;
 import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;
 
+/**
+ * Classe Controle
+ * @return: null
+ * @author: SimpleSolutionDev Team
+ */
 public class AppNotas {
 	private Table table;
 	private Table tbAluno;
 	private Table tbTurma;
 	
+	/**
+	 * Metodo popular tabela
+	 * @return: null
+	 * @author: SimpleSolutionDev Team
+	 */
 	private void populaTabela(int codProf){
 		AvaliacaoDAO dao = new AvaliacaoDAO();
 		ArrayList<Avaliacao> lista = dao.consultarTodos();
@@ -46,6 +56,11 @@ public class AppNotas {
 		}
 	}
 	
+	/**
+	 * Metodo popular tabela turma relacionada as notas
+	 * @return: null
+	 * @author: SimpleSolutionDev Team
+	 */
 	private void populaTabelaTurma(int codProf) {
 		HistTurmaDAO ht_dao = new HistTurmaDAO();
 		ArrayList<Integer> lista = ht_dao.consultarPorProfessor(codProf);
@@ -60,6 +75,12 @@ public class AppNotas {
 			tbi.setText(valores);
 		}
 	}
+	
+	/**
+	 * Metodo popular tabela
+	 * @return: null
+	 * @author: SimpleSolutionDev Team
+	 */
 	private void populaTabelaAluno(int codTurma) {
 		MatriculaDAO matr_dao = new MatriculaDAO();
 		ArrayList<Integer> lista = matr_dao.consultaAlunosByTurma(codTurma);

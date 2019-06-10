@@ -27,7 +27,11 @@ import org.eclipse.swt.widgets.TableItem;
 import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;
-
+/**
+ * Classe Controle Professor
+ * @return: null
+ * @author: SimpleSolutionDev Team
+ */
 public class TelaProfessor {
 
 	protected Shell shlProfessor;
@@ -39,6 +43,11 @@ public class TelaProfessor {
 	private Text txbCpf;
 	private Table tableTurmas;
 
+	/**
+	 * Metodo caso seja novo registro
+	 * @return: null
+	 * @author: SimpleSolutionDev Team
+	 */
 	private void novo() {
 		ProfessorDAO dao = new ProfessorDAO();
 		txbCodigo.setText(Integer.toString(dao.proximoId()));
@@ -46,7 +55,11 @@ public class TelaProfessor {
 		shlProfessor.setText("Professor - Novo");
 		
 	}
-
+	/**
+	 * Metodo caso seja registro antigo
+	 * @return: null
+	 * @author: SimpleSolutionDev Team
+	 */
 	private void populaProfessor(Professor professor) {
 		
 		txbCodigo.setText(Integer.toString(professor.getCodProf()));
@@ -60,7 +73,11 @@ public class TelaProfessor {
 		txbTelefone.setText(professor.getTelProf());
 		
 	}
-	
+	/**
+	 * Metodo popular tabela
+	 * @return: null
+	 * @author: SimpleSolutionDev Team
+	 */
 	private void populaTabelaTurmas() {
 		HistTurmaDAO dao = new HistTurmaDAO();
 		ArrayList<Integer> lista = dao.consultarCodTurmaPorProf(Integer.parseInt(txbCodigo.getText()));
@@ -85,14 +102,22 @@ public class TelaProfessor {
 	}
 	
 
-	
+	/**
+	 * Metodo consultar total de alunos
+	 * @return: null
+	 * @author: SimpleSolutionDev Team
+	 */
 	private int consultaNumeroAlunos(int codTurma) {
 		MatriculaDAO dao = new MatriculaDAO();
 		Turma turma = new Turma();
 		turma.setCodTurma(codTurma);
 		return dao.alunosNaTurma(turma);
 	}
-	
+	/**
+	 * Metodo consultar idioma relacionado a turma
+	 * @return: null
+	 * @author: SimpleSolutionDev Team
+	 */
 	private Idioma consultaIdioma(Turma turma) {
 		IdiomaDAO dao = new IdiomaDAO();
 		Idioma idioma = new Idioma();
@@ -102,7 +127,11 @@ public class TelaProfessor {
 		idioma = dao.consultar(idioma);
 		return idioma;
 	}
-	
+	/**
+	 * Metodo consultar TE relacionado a turma
+	 * @return: null
+	 * @author: SimpleSolutionDev Team
+	 */
 	private TipoEnsino consultaTE(Turma turma) {
 		TipoEnsinoDAO dao = new TipoEnsinoDAO();
 		TipoEnsino te = new TipoEnsino();

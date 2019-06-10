@@ -24,7 +24,11 @@ import model.IdiomaDAO;
 import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.TableColumn;
 import org.eclipse.swt.widgets.TableItem;
-
+/**
+ * Classe Controle Idioma
+ * @return: null
+ * @author: SimpleSolutionDev Team
+ */
 public class TelaIdioma {
 
 	protected Shell shlIdioma;
@@ -32,6 +36,11 @@ public class TelaIdioma {
 	private Text txbCodigo;
 	private Text txbIdioma;
 	
+	/**
+	 * Metodo caso seja novo registro
+	 * @return: null
+	 * @author: SimpleSolutionDev Team
+	 */
 	private void novoIdioma() {
 		IdiomaDAO dao = new IdiomaDAO();
 		txbCodigo.setText(Integer.toString(dao.proximoId()));
@@ -39,11 +48,20 @@ public class TelaIdioma {
 		table.setEnabled(false);
 		
 	}
+	/**
+	 * Metodo caso seja registro antigo
+	 * @return: null
+	 * @author: SimpleSolutionDev Team
+	 */
 	private void populaIdioma() {
 		populaTabela();
 		txbIdioma.setEnabled(false);
 	}
-	
+	/**
+	 * Metodo popular tabela
+	 * @return: null
+	 * @author: SimpleSolutionDev Team
+	 */
 	private void populaTabela() {
 		IdiomaDAO dao = new IdiomaDAO();
 		ArrayList<Idioma> r = dao.consultarTodos();

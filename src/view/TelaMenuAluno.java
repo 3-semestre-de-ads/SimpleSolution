@@ -30,6 +30,10 @@ public class TelaMenuAluno {
 	private Table tbFaltas;
 	private Table tbNotas;
 	
+	/**
+	 * Metodo responsavel por Popular a Tabela de Notas
+	 * @return: null
+	 */	
 	private void populaNotas(int codAluno) {
 		MatriculaDAO mtr_dao = new MatriculaDAO();
 		ArrayList<Matricula> lista = mtr_dao.consultaMatriculaByAluno(codAluno);
@@ -48,6 +52,10 @@ public class TelaMenuAluno {
 		tbNotas.layout();
 		
 	}
+	/**
+	 * Metodo responsavel por popular tabela de Faltas
+	 * @return: null
+	 */
 	private void populaFaltas(int codAluno) {
 		MatriculaDAO mtr_dao = new MatriculaDAO();
 		ArrayList<Matricula> lista = mtr_dao.consultaMatriculaByAluno(codAluno);

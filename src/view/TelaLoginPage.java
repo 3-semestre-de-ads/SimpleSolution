@@ -40,6 +40,11 @@ public class TelaLoginPage {
 		txbSenha.setText("");
 		txbUsuario.setFocus();
 	}
+	
+	/**
+	 * Metodo responsavel por Validar Logins
+	 * @return: null
+	 */
 	public void validaLogin() {
 
 		if (txbUsuario.getText().contains("ADM")) {

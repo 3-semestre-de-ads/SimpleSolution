@@ -32,7 +32,11 @@ import org.eclipse.swt.events.MouseListener;
 import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.events.SelectionListener;
-
+/**
+ * Classe Controle
+ * @return: null
+ * @author: SimpleSolutionDev Team
+ */
 public class TelaTurma {
 
 	protected Shell shlTurma;
@@ -47,12 +51,23 @@ public class TelaTurma {
 	private Text txbTE;
 	private Text txbHorario;
 	private Label lblNumAlunos;
-
+	
+	/**
+	 * Metodo caso seja novo registro
+	 * @return: null
+	 * @author: SimpleSolutionDev Team
+	 */
 	private void novaTurma() {
 		table.setEnabled(false);
 		populaTabela();
 		shlTurma.setText("Turma - Nova");
 	}
+	
+	/**
+	 * Metodo caso seja registro antigo
+	 * @return: null
+	 * @author: SimpleSolutionDev Team
+	 */
 	private void populaTurma(Turma turma) {
 		
 		txbCodTE.setEnabled(false);
@@ -90,6 +105,12 @@ public class TelaTurma {
 		populaTabela();
 		shlTurma.setText("Turma - " + txbIdioma.getText() + " - PROF: " + txbNomeProf.getText());
 	}
+	
+	/**
+	 * Metodo popular tabela
+	 * @return: null
+	 * @author: SimpleSolutionDev Team
+	 */
 	private void populaTabela() {
 		table.removeAll();
 		TurmaDAO dao = new TurmaDAO();
@@ -113,6 +134,11 @@ public class TelaTurma {
 		}
 	}
 	
+	/**
+	 * Metodo consultar idioma relacionado a Turma
+	 * @return: null
+	 * @author: SimpleSolutionDev Team
+	 */
 	private Idioma consultaIdioma(Turma turma) {
 		IdiomaDAO dao = new IdiomaDAO();
 		Idioma idioma = new Idioma();
@@ -121,7 +147,11 @@ public class TelaTurma {
 		idioma = dao.consultar(idioma);
 		return idioma;
 	}
-	
+	/**
+	 * Metodo consultar tipo de ensino relacionado a Turma
+	 * @return: null
+	 * @author: SimpleSolutionDev Team
+	 */
 	private TipoEnsino consultaTE(Turma turma) {
 		TipoEnsinoDAO dao = new TipoEnsinoDAO();
 		TipoEnsino te = new TipoEnsino();
@@ -131,6 +161,11 @@ public class TelaTurma {
 		return te;
 	}
 	
+	/**
+	 * Metodo para consultar Professor relacionado a Turma
+	 * @return: null
+	 * @author: SimpleSolutionDev Team
+	 */
 	private Professor consultaProfessor(Turma turma) {
 		HistTurma ht = new HistTurma();
 		HistTurmaDAO ht_dao = new HistTurmaDAO();
@@ -145,6 +180,11 @@ public class TelaTurma {
 		return professor;	
 	}
 	
+	/**
+	 * Metodo contador do numero de alunos
+	 * @return: null
+	 * @author: SimpleSolutionDev Team
+	 */
 	private int consultaNumeroAlunos(Turma turma) {
 		MatriculaDAO dao = new MatriculaDAO();
 		return dao.alunosNaTurma(turma);

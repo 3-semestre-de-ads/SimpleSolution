@@ -19,6 +19,11 @@ import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.TableColumn;
 import org.eclipse.swt.widgets.TableItem;
 
+/**
+ * Classe Menu Professor
+ * @return: null
+ * @author: SimpleSolutionDev Team
+ */
 public class TelaAdministrador {
 
 	protected Shell shlAdministrado;
@@ -27,6 +32,11 @@ public class TelaAdministrador {
 	private Text txbSenha;
 	private Table table;
 	
+	/**
+	 * Metodo caso seja novo registro
+	 * @return: null
+	 * @author: SimpleSolutionDev Team
+	 */
 	private void novo() {
 		shlAdministrado.setText("Administrador - Novo");
 		table.setEnabled(false);
@@ -37,6 +47,12 @@ public class TelaAdministrador {
 		txbUsuario.setText(String.format("ADM%05d", dao.proximoId()));
 		populaTabela();
 	}
+	
+	/**
+	 * Metodo caso seja registro antigo
+	 * @return: null
+	 * @author: SimpleSolutionDev Team
+	 */
 	private void populaAdmin(Administrador admin) {
 		populaTabela();
 		AdministradorDAO dao = new AdministradorDAO();
@@ -45,6 +61,12 @@ public class TelaAdministrador {
 		admin = dao.consultar(admin);
 		shlAdministrado.setText("Administrador - Consulta");
 	}
+	
+	/**
+	 * Metodo para popular Tabela
+	 * @return: null
+	 * @author: SimpleSolutionDev Team
+	 */
 	private void populaTabela() {
 		AdministradorDAO dao = new AdministradorDAO();
 		ArrayList<Administrador> r = dao.consultarTodos();

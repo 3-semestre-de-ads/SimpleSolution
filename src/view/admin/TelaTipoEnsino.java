@@ -18,13 +18,22 @@ import org.eclipse.swt.widgets.Table;
 import org.eclipse.swt.widgets.TableColumn;
 import org.eclipse.swt.widgets.TableItem;
 import org.eclipse.swt.widgets.Button;
-
+/**
+ * Classe Controle do Tipo de Ensino
+ * @return: null
+ * @author: SimpleSolutionDev Team
+ */
 public class TelaTipoEnsino {
 	private Text text;
 	private Text text_1;
 	private Table table;
 	private Text text_2;
 	
+	/**
+	 * Metodo caso seja novo registro
+	 * @return: null
+	 * @author: SimpleSolutionDev Team
+	 */
 	private void novoTE() {
 		TipoEnsinoDAO dao = new TipoEnsinoDAO();
 		text.setText(Integer.toString(dao.proximoId()));
@@ -32,6 +41,11 @@ public class TelaTipoEnsino {
 		table.setEnabled(false);
 	}
 	
+	/**
+	 * Metodo caso seja registro antigo
+	 * @return: null
+	 * @author: SimpleSolutionDev Team
+	 */
 	private void populaTE(TipoEnsino te) {
 		populaTabela();
 		table.setEnabled(true);
@@ -40,6 +54,11 @@ public class TelaTipoEnsino {
 		text_2.setEnabled(false);
 	}
 	
+	/**
+	 * Metodo popular tabela
+	 * @return: null
+	 * @author: SimpleSolutionDev Team
+	 */
 	private void populaTabela() {
 		TipoEnsinoDAO dao = new TipoEnsinoDAO();
 		ArrayList<TipoEnsino>r = dao.consultarTodos();

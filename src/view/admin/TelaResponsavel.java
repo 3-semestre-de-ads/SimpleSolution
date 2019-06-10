@@ -12,7 +12,11 @@ import model.ResponsavelDAO;
 import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Table;
 import org.eclipse.swt.widgets.TableColumn;
-
+/**
+ * Classe Controle de Responsavel
+ * @return: null
+ * @author: SimpleSolutionDev Team
+ */
 public class TelaResponsavel {
 
 	protected Shell shlResponsavl;
@@ -24,10 +28,20 @@ public class TelaResponsavel {
 	private Text txbCpf;
 	private Table table;
 	
+	/**
+	 * Metodo caso seja novo registro
+	 * @return: null
+	 * @author: SimpleSolutionDev Team
+	 */
 	private void novoResp() {
 		shlResponsavl.setText("Responsavel - Novo");
 	}
 	
+	/**
+	 * Metodo caso seja registro antigo
+	 * @return: null
+	 * @author: SimpleSolutionDev Team
+	 */
 	private void populaResp(Responsavel resp) {
 		ResponsavelDAO dao = new ResponsavelDAO();
 		resp = dao.consulta(resp);

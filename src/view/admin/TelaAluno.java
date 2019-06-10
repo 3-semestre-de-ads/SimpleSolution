@@ -46,7 +46,11 @@ import org.eclipse.swt.internal.DPIUtil;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.widgets.TableColumn;
 import org.eclipse.swt.widgets.TableItem;
-
+/**
+ * Classe ALuno
+ * @return: null
+ * @author: SimpleSolutionDev Team
+ */
 public class TelaAluno {
 
 	protected Shell shlAluno;
@@ -81,7 +85,12 @@ public class TelaAluno {
  			tbi.setText(valores);
 		}		
 	}
-	
+
+/**
+ * Metodo caso seja novo registro
+ * @return: null
+ * @author: SimpleSolutionDev Team
+ */
 	private void populaAluno(Aluno aluno) {
 		txbCodigo.setText(Integer.toString(aluno.getCodAluno()));
 		txbNome.setText(aluno.getNomeAluno());
@@ -99,6 +108,11 @@ public class TelaAluno {
 
 
 	}
+	/**
+	 * Metodo caso seja registro antigo
+	 * @return: null
+	 * @author: SimpleSolutionDev Team
+	 */
 	private Aluno populaClasse() {
 		Aluno aln = new Aluno();
 		
@@ -112,7 +126,11 @@ public class TelaAluno {
 		aln.setCodResp(Integer.parseInt(txbCodResp.getText()));
 		return aln;
 	}
-	
+	/**
+	 * Metodo caso seja novo registro
+	 * @return: null
+	 * @author: SimpleSolutionDev Team
+	 */
 	private void novoAluno() {
 		shlAluno.setText("Aluno - Novo");
 		AlunoDAO dao = new AlunoDAO();
@@ -123,6 +141,11 @@ public class TelaAluno {
 		
 	}
 	
+	/**
+	 * Metodo popular tabela
+	 * @return: null
+	 * @author: SimpleSolutionDev Team
+	 */
 	private void populaTurmaCadastrada(int codAluno) {
 		MatriculaDAO matr_dao = new MatriculaDAO();
 		ArrayList<Integer> lista = matr_dao.consultaTurmaByAluno(codAluno);

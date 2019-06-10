@@ -15,7 +15,13 @@ import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.events.SelectionListener;
 import org.eclipse.swt.layout.FillLayout;
 
+/**
+ * Classe Menu Professor
+ * @return: null
+ * @author: SimpleSolutionDev Team
+ */
 public class TelaMenuProfessor {
+	
 
 	protected Shell shlSimplesolutionAluno;
 

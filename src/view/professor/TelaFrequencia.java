@@ -29,19 +29,21 @@ import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.widgets.DateTime;
 
+/**
+ * Classe Controle de frequencias
+ * @return: null
+ * @author: SimpleSolutionDev Team
+ */
 public class TelaFrequencia {
 	private Table tbAlunos;
 	private Table tbTurmas;
 
 	
-	private void novo() {
-		
-	}
-	
-	private void populaFrequencia() {
-		
-	}
-	
+	/**
+	 * Metodo popular tabela
+	 * @return: null
+	 * @author: SimpleSolutionDev Team
+	 */	
 	private void populaTabelaTurma(int codProf) {
 		HistTurmaDAO ht_dao = new HistTurmaDAO();
 		ArrayList<Integer> lista = ht_dao.consultarPorProfessor(codProf);
@@ -58,6 +60,11 @@ public class TelaFrequencia {
 		
 	}
 	
+	/**
+	 * Metodo popular tabela
+	 * @return: null
+	 * @author: SimpleSolutionDev Team
+	 */
 	private void populaTabelaAlunos(int codTurma) {
 		MatriculaDAO matr_dao = new MatriculaDAO();
 		ArrayList<Integer> lista = matr_dao.consultaAlunosByTurma(codTurma);
