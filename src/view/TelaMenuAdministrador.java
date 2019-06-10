@@ -179,7 +179,7 @@ public class TelaMenuAdministrador {
 					@Override
 					public void widgetDefaultSelected(SelectionEvent arg0) {}});
 			/*
-			 * MenuIdiomas
+			 * MenuTurma
 			 */
 			MenuItem itemTurma = new MenuItem(menuAulas, SWT.CASCADE);
 			itemTurma.setText("Turmas");
@@ -209,7 +209,7 @@ public class TelaMenuAdministrador {
 					@Override
 					public void widgetSelected(SelectionEvent arg0) {
 						TelaTurma tela = new TelaTurma();
-						Turma turma = new Turma();
+						Turma turma = new Turma();						
 						tela.open(turma);
 						
 					}

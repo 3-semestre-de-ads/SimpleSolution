@@ -94,12 +94,7 @@ public class HistTurma {
 	 */
 	public void setDataFiHT(Date dataFiHT) {
 		try {
-			if(dataFiHT == null) {
-				JOptionPane.showMessageDialog(null, "Campo nulo", "Data Fim Hist�rico Turma", 1);
-			}
-			else {
 				this.dataFiHT = dataFiHT;
-			}
 		}
 		catch(DateTimeParseException e) {
 			JOptionPane.showMessageDialog(null, e, "Data Fim Hist�rico Turma", 1);

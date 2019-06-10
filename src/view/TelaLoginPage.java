@@ -10,7 +10,9 @@ import org.eclipse.swt.SWT;
 import org.eclipse.swt.widgets.Text;
 
 import model.AdministradorDAO;
+import model.Aluno;
 import model.AlunoDAO;
+import model.Professor;
 import model.ProfessorDAO;
 
 import org.eclipse.swt.widgets.Label;
@@ -40,7 +42,7 @@ public class TelaLoginPage {
 	}
 	public void validaLogin() {
 
-		if (txbUsuario.getText().indexOf("ADM")!= -1) {
+		if (txbUsuario.getText().contains("ADM")) {
 			AdministradorDAO dao = new AdministradorDAO();
 			if (dao.efetuarLogin(txbUsuario.getText(), txbSenha.getText())) {
 				TelaMenuAdministrador tela =  new TelaMenuAdministrador();					
@@ -48,21 +50,21 @@ public class TelaLoginPage {
 				limpaCampos();
 
 			}
-		}else if (txbUsuario.getText().indexOf("ALN")!= -1) {
+		}else if (txbUsuario.getText().contains("ALN")) {
 			AlunoDAO dao = new AlunoDAO();
-			String r = dao.efetuarLogin(txbUsuario.getText(), txbSenha.getText());
+			Aluno r = dao.efetuarLogin(txbUsuario.getText(), txbSenha.getText());
 			if (r != null) {
 				TelaMenuAluno tela =  new TelaMenuAluno();
 				tela.open(r);
 				limpaCampos();				
 			}
 
-		}else if (txbUsuario.getText().indexOf("PRF")!= -1) {
+		}else if (txbUsuario.getText().contains("PRF")) {
 			ProfessorDAO dao = new ProfessorDAO();
-			String r = dao.efetuarLogin(txbUsuario.getText(), txbSenha.getText());
-			if (r != null) {
+			Professor p = dao.efetuarLogin(txbUsuario.getText(), txbSenha.getText());
+			if (p != null) {
 				TelaMenuProfessor tela =  new TelaMenuProfessor();
-				tela.open(r);
+				tela.open(p);
 				limpaCampos();
 			}	
 		}

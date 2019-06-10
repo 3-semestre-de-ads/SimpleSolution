@@ -99,8 +99,11 @@ public class IdiomaDAO {
 					dbc.st = dbc.con.prepareStatement(sql);
 					dbc.st.setInt(1, idioma.getCodIdioma());
 					dbc.rs = dbc.st.executeQuery();
-					idioma.setNomeIdioma(dbc.rs.getString(2));
-					idioma.setNivelIdioma(dbc.rs.getString(3));
+					while (dbc.rs.next()) {
+						idioma.setNomeIdioma(dbc.rs.getString(2));
+						idioma.setNivelIdioma(dbc.rs.getString(3));
+					}
+
 				}			
 			} 
 			catch (SQLException e) {

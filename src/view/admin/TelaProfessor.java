@@ -3,15 +3,27 @@ package view.admin;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.swt.widgets.Label;
+
+import java.util.ArrayList;
+
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.widgets.Text;
 
+import model.HistTurmaDAO;
+import model.Idioma;
+import model.IdiomaDAO;
+import model.MatriculaDAO;
 import model.Professor;
 import model.ProfessorDAO;
+import model.TipoEnsino;
+import model.TipoEnsinoDAO;
+import model.Turma;
+import model.TurmaDAO;
 
 import org.eclipse.swt.widgets.DateTime;
 import org.eclipse.swt.widgets.Table;
 import org.eclipse.swt.widgets.TableColumn;
+import org.eclipse.swt.widgets.TableItem;
 import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;
@@ -50,7 +62,54 @@ public class TelaProfessor {
 	}
 	
 	private void populaTabelaTurmas() {
+		HistTurmaDAO dao = new HistTurmaDAO();
+		ArrayList<Integer> lista = dao.consultarCodTurmaPorProf(Integer.parseInt(txbCodigo.getText()));
+		TurmaDAO dao_turma = new TurmaDAO();
 		
+		for (int i = 0; i < lista.size(); i++) {
+			Turma turma = new Turma();
+			turma.setCodTurma(lista.get(i));
+			turma = dao_turma.consultar(turma);
+			
+			Idioma idioma = consultaIdioma(turma);
+			TipoEnsino te = consultaTE(turma);
+			int num_alunos = consultaNumeroAlunos(lista.get(i));
+			
+			String[] valores = {Integer.toString(lista.get(i)), 
+					idioma.getNomeIdioma(), 
+					te.getNomeTE(), 
+					Integer.toString(num_alunos)};
+			TableItem tbi = new TableItem(tableTurmas, SWT.NONE);
+			tbi.setText(valores);
+		}
+	}
+	
+
+	
+	private int consultaNumeroAlunos(int codTurma) {
+		MatriculaDAO dao = new MatriculaDAO();
+		Turma turma = new Turma();
+		turma.setCodTurma(codTurma);
+		return dao.alunosNaTurma(turma);
+	}
+	
+	private Idioma consultaIdioma(Turma turma) {
+		IdiomaDAO dao = new IdiomaDAO();
+		Idioma idioma = new Idioma();
+
+		
+		idioma.setCodIdioma(turma.getCodIdioma());		
+		idioma = dao.consultar(idioma);
+		return idioma;
+	}
+	
+	private TipoEnsino consultaTE(Turma turma) {
+		TipoEnsinoDAO dao = new TipoEnsinoDAO();
+		TipoEnsino te = new TipoEnsino();
+
+		te.setCodTE(turma.getCodTE());
+		te = dao.consultar(te);
+		return te;
 	}
 	/**
 	 * Open the window.
@@ -63,6 +122,7 @@ public class TelaProfessor {
 			novo();
 		}else {
 			populaProfessor(professor);
+			populaTabelaTurmas();
 		}
 		shlProfessor.open();
 		shlProfessor.layout();
@@ -137,6 +197,7 @@ public class TelaProfessor {
 		lblNewLabel.setText("Turmas");
 		
 		tableTurmas = new Table(shlProfessor, SWT.BORDER | SWT.FULL_SELECTION);
+		tableTurmas.setEnabled(false);
 		tableTurmas.setBounds(369, 38, 344, 380);
 		tableTurmas.setHeaderVisible(true);
 		tableTurmas.setLinesVisible(true);

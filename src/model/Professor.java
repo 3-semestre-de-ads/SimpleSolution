@@ -266,12 +266,8 @@ public class Professor {
 	 * @param statusProf - valor do atributo
 	 */
 	public void setStatusProf(String statusProf) {
-		if(statusProf.length() > 1 || statusProf == null || statusProf == "" || statusProf != "A" && statusProf != "I") {
-			JOptionPane.showMessageDialog(null, "Tamanho acima do esperado, valor incorreto ou campo nulo", "Status Professor", 1);
-		}
-		else {
 			this.statusProf = statusProf;
-		}
+
 	}
 	
 }

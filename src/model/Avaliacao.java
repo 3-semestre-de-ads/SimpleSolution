@@ -56,7 +56,7 @@ public class Avaliacao {
 	 * @param nomeAval - valor do atributo
 	 */
 	public void setNomeAval(String nomeAval) {
-		if(nomeAval.length() < 10 || nomeAval == null || nomeAval == "") {
+		if(nomeAval.length() > 10 || nomeAval == null || nomeAval == "") {
 			JOptionPane.showMessageDialog(null, "Tamanho acima do esperado ou campo nulo", "Nome Avalia��o", 1);
 		}
 		else {

@@ -1,20 +1,21 @@
 package model;
 
 import java.sql.SQLException;
+import java.util.ArrayList;
 
 import javax.swing.JOptionPane;
 
 import services.DbConn;
 
 /**
- * Essa classe é responsável por acessar o banco de dados e atualizar a tabela HISTTURMA
- * Comunicação com a classe HistTurma
+ * Essa classe ï¿½ responsï¿½vel por acessar o banco de dados e atualizar a tabela HISTTURMA
+ * Comunicaï¿½ï¿½o com a classe HistTurma
  * @author Simple Solution Devs
  */
 public class HistTurmaDAO {
 
 	/**
-	 * Atributos para realizar conexão com o banco de dados
+	 * Atributos para realizar conexï¿½o com o banco de dados
 	 */
 	private DbConn dbc = new DbConn();
 	private String men, sql;
@@ -22,8 +23,8 @@ public class HistTurmaDAO {
 
 	
 	/**
-	 * Método responsável por retornar uma lista com o registro de todo o histórico
-	 * @return listaHT- lista de histórico (array)
+	 * Mï¿½todo responsï¿½vel por retornar uma lista com o registro de todo o histï¿½rico
+	 * @return listaHT- lista de histï¿½rico (array)
 	 */
 	public HistTurma[] consultarTodos() {
 		sql = "SELECT * FROM HISTTURMA;";
@@ -62,9 +63,9 @@ public class HistTurmaDAO {
 
 
 	/**
-	 * Método responsável por popular a tabela
+	 * Mï¿½todo responsï¿½vel por popular a tabela
 	 * Tabela HISTTURMA
-	 * @param ht - objeto instânciado da classe HistTurma
+	 * @param ht - objeto instï¿½nciado da classe HistTurma
 	 * @return ht
 	 */
 	public HistTurma consultar(HistTurma ht) {
@@ -75,10 +76,12 @@ public class HistTurmaDAO {
 					dbc.st = dbc.con.prepareStatement(sql);
 					dbc.st.setInt(1, ht.getCodMat());
 					dbc.rs = dbc.st.executeQuery();
-					ht.setDataInHT(dbc.rs.getDate(2));
-					ht.setDataFiHT(dbc.rs.getDate(3));
-					ht.setCodMat(dbc.rs.getInt(4));
-					ht.setCodProf(dbc.rs.getInt(4));
+					while (dbc.rs.next()) {
+						ht.setDataInHT(dbc.rs.getDate(2));
+						ht.setDataFiHT(dbc.rs.getDate(3));
+						ht.setCodMat(dbc.rs.getInt(4));
+						ht.setCodProf(dbc.rs.getInt(4));
+					}
 				}			
 			} 
 			catch (SQLException e) {
@@ -90,13 +93,63 @@ public class HistTurmaDAO {
 		}
 		return ht; 
 	}
+	
+	public HistTurma consultarPorTurma(HistTurma ht) {
+		sql = "SELECT * FROM HISTTURMA WHERE codMat=?;";
+		if (dbc.getConnection()) {
+			try {
+				if (dbc.getConnection()) {
+					dbc.st = dbc.con.prepareStatement(sql);
+					dbc.st.setInt(1, ht.getCodMat());
+					dbc.rs = dbc.st.executeQuery();
+					while (dbc.rs.next()) {
+						ht.setDataInHT(dbc.rs.getDate(2));
+						ht.setDataFiHT(dbc.rs.getDate(3));
+						ht.setCodMat(dbc.rs.getInt(4));
+						ht.setCodProf(dbc.rs.getInt(4));
+					}
+				}			
+			} 
+			catch (SQLException e) {
+				ht = null;
+			} 
+			finally {
+				dbc.close();
+			}
+		}
+		return ht; 
+	}
+	
+	public ArrayList<Integer> consultarPorProfessor(int codProf) {
+		sql = "SELECT * FROM HISTTURMA WHERE codMat=?;";
+		ArrayList<Integer> lista = new ArrayList<Integer>();
+		if (dbc.getConnection()) {
+			try {
+				if (dbc.getConnection()) {
+					dbc.st = dbc.con.prepareStatement(sql);
+					dbc.st.setInt(1, codProf);
+					dbc.rs = dbc.st.executeQuery();
+					while (dbc.rs.next()) {
+						lista.add(dbc.rs.getInt(4));
+					}
+				}			
+			} 
+			catch (SQLException e) {
+				lista = null;
+			} 
+			finally {
+				dbc.close();
+			}
+		}
+		return lista; 
+	}
 
-
+	
 
 	/**
-	 * Método responsável por retornar o próximo número do índice no banco de dados
+	 * Mï¿½todo responsï¿½vel por retornar o prï¿½ximo nï¿½mero do ï¿½ndice no banco de dados
 	 * Tabela HISTTURMA
-	 * @return r - valor do próximo índice
+	 * @return r - valor do prï¿½ximo ï¿½ndice
 	 */
 	public int proximoId() {
 		sql = "SELECT MAX('codHT') FROM HISTTURMA;";
@@ -117,12 +170,36 @@ public class HistTurmaDAO {
 		return r;
 	}
 
+	public ArrayList<Integer> consultarCodTurmaPorProf(int codProf) {
+		sql = "SELECT * FROM HISTTURMA WHERE codProf=?";
+		ArrayList<Integer> listaTurma = new ArrayList<Integer>();
+		if (dbc.getConnection()) {
+			try {
+				if (dbc.getConnection()) {
+					dbc.st = dbc.con.prepareStatement(sql);
+					dbc.st.setInt(1, codProf);
+					dbc.rs = dbc.st.executeQuery();
 
+					while (dbc.rs.next()) {
+						listaTurma.add(dbc.rs.getInt(4));
+					}									
+				}			
+			} 
+			catch (SQLException e) {
+				listaTurma=null;
+				JOptionPane.showMessageDialog(null,e, "Falha", 1);
+			} 
+			finally {
+				dbc.close();
+			}
+		}
+		return listaTurma;
+	}
 	
 	/**
-	 * Método responsável por inserir um novo registro ou atualizar um registro existente
+	 * Mï¿½todo responsï¿½vel por inserir um novo registro ou atualizar um registro existente
 	 * Tabela HISTTURMA
-	 * @param ht - objeto instânciado da classe HistTurma
+	 * @param ht - objeto instï¿½nciado da classe HistTurma
 	 * @return men - mensagem de aviso
 	 */
 	public String inserirAtualizar(HistTurma ht) {

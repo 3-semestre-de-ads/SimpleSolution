@@ -29,18 +29,27 @@ public class ProfessorDAO {
 	 * @param senha - valor recebido para o atributo senhaProf
 	 * @return valor boolean - TRUE (select retornado com sucesso) ou FALSE (select sem retorno ou cadastro inativo)
 	 */
-	public String efetuarLogin(String user, String senha) {
-		sql = "SELECT nomeProf, statusProf FROM PROFESSOR WHERE userProf=? AND senhaProf=?";
+	public Professor efetuarLogin(String user, String senha) {
+		sql = "SELECT * FROM PROFESSOR WHERE userProf=? AND senhaProf=?";
 		if (dbc.getConnection()) {
 			try {
 				dbc.st = dbc.con.prepareStatement(sql);
 				dbc.st.setString(1, user.trim());
 				dbc.st.setString(2, senha.trim());
 				dbc.rs = dbc.st.executeQuery();
-				while (dbc.rs.next()) {
-					
-					if (dbc.rs.getString(2).indexOf("A") != -1) {
-						return dbc.rs.getString(1);
+				while (dbc.rs.next()) {					
+					if (dbc.rs.getString(10).indexOf("A") != -1) {
+						Professor prof = new Professor();
+						prof.setCodProf(dbc.rs.getInt(1));
+						prof.setNomeProf(dbc.rs.getString(2));
+						prof.setNascProf(dbc.rs.getDate(3));
+						prof.setRgProf(dbc.rs.getString(4));
+						prof.setCpfProf(dbc.rs.getString(5));
+						prof.setEmailProf(dbc.rs.getString(6));
+						prof.setTelProf(dbc.rs.getString(7));
+						prof.setUserProf(dbc.rs.getString(8));
+										
+						return prof;
 					}
 					else {
 						JOptionPane.showMessageDialog(null,"Usuário Inativo");
@@ -53,7 +62,8 @@ public class ProfessorDAO {
 				}
 
 			}
-			catch (SQLException e) {				
+			catch (SQLException e) {
+				JOptionPane.showMessageDialog(null, e);
 				return null;
 			}
 			finally {

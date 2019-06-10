@@ -1,20 +1,21 @@
 package model;
 
 import java.sql.SQLException;
+import java.util.ArrayList;
 
 import javax.swing.JOptionPane;
 
 import services.DbConn;
 
 /**
- * Essa classe é responsável por acessar o banco de dados e atualizar a tabela FREQUENCIA
- * Comunicação com a classe Administrador
+ * Essa classe ï¿½ responsï¿½vel por acessar o banco de dados e atualizar a tabela FREQUENCIA
+ * Comunicaï¿½ï¿½o com a classe Administrador
  * @author Simple Solution Devs
  */
 public class FrequenciaDAO {
 
 	/**
-	 * Atributos para realizar conexão com o banco de dados
+	 * Atributos para realizar conexï¿½o com o banco de dados
 	 */
 	private DbConn dbc = new DbConn();
 	private String men, sql;
@@ -22,9 +23,9 @@ public class FrequenciaDAO {
 	
 	
 	/**
-	 * Método responsável por retornar o próximo número do índice no banco de dados
+	 * Mï¿½todo responsï¿½vel por retornar o prï¿½ximo nï¿½mero do ï¿½ndice no banco de dados
 	 * Tabela FREQUENCIA
-	 * @return r - valor do próximo índice
+	 * @return r - valor do prï¿½ximo ï¿½ndice
 	 */
 	public int proximoId() {
 		sql = "SELECT MAX('codFreq') FROM FREQUENCIA;";
@@ -43,11 +44,40 @@ public class FrequenciaDAO {
 		return r;
 	}
 	
-	
+	public ArrayList<Frequencia> consultarByCodMat(int codMat) {
+		sql = "SELECT * FROM FREQUENCIA WHERE codMat=?;";
+		ArrayList<Frequencia> listaFreq = new ArrayList<Frequencia>();
+		if (dbc.getConnection()) {
+			try {
+				if (dbc.getConnection()) {
+					dbc.st = dbc.con.prepareStatement(sql);
+					dbc.st.setInt(1, codMat);
+					dbc.rs = dbc.st.executeQuery();
+
+					while (dbc.rs.next()) { 
+						Frequencia frequencia = new Frequencia();
+						frequencia.setCodFreq(dbc.rs.getInt(1));
+						frequencia.setDataFreq(dbc.rs.getDate(2));
+						frequencia.setStatusFreq(dbc.rs.getString(3));
+						frequencia.setCodMat(dbc.rs.getInt(4));
+						listaFreq.add(frequencia);
+					}									
+				}			
+			} 
+			catch (SQLException e) {
+				listaFreq = null;
+				JOptionPane.showMessageDialog(null,e, "Falha", 1);
+			} 
+			finally {
+				dbc.close();
+			}
+		}
+		return listaFreq;
+	}
 	
 	/**
-	 * Método responsável por retornar uma lista com o registro de todos as frequências
-	 * @return listaFreq - lista de frequências (array)
+	 * Mï¿½todo responsï¿½vel por retornar uma lista com o registro de todos as frequï¿½ncias
+	 * @return listaFreq - lista de frequï¿½ncias (array)
 	 */
 	public Frequencia[] consultarTodos() {
 		sql = "SELECT * FROM FREQUENCIA;";
@@ -85,9 +115,9 @@ public class FrequenciaDAO {
 	
 	
 	/**
-	 * Método responsável por retornar um registro de acordo com o código fornecido
+	 * Mï¿½todo responsï¿½vel por retornar um registro de acordo com o cï¿½digo fornecido
 	 * Tabela FREQUENCIA
-	 * @param frequencia - objeto instânciado da classe Frequencia
+	 * @param frequencia - objeto instï¿½nciado da classe Frequencia
 	 * @return frequencia 
 	 */
 	public Frequencia consultar(Frequencia frequencia) {
@@ -116,9 +146,9 @@ public class FrequenciaDAO {
 	
 	
 	/**
-	 * Método responsável por inserir um novo registro ou atualizar um registro existente
+	 * Mï¿½todo responsï¿½vel por inserir um novo registro ou atualizar um registro existente
 	 * Tabela FREQUENCIA
-	 * @param frequencia - objeto instânciado da classe Frequencia
+	 * @param frequencia - objeto instï¿½nciado da classe Frequencia
 	 * @return men - mensagem de aviso
 	 */
 	public String inserirAtualizar(Frequencia frequencia) {

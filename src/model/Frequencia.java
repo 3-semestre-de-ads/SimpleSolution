@@ -90,12 +90,7 @@ public class Frequencia {
 	 * @param statusFreq - valor do atributo
 	 */
 	public void setStatusFreq(String statusFreq) {
-		if(statusFreq.length() > 1 || statusFreq == null || statusFreq == "" || statusFreq != "P" && statusFreq != "F") {
-			JOptionPane.showMessageDialog(null, "Tamanho acima do esperado, valor incorreto ou campo nulo", "Status Frequ�ncia", 1);
-		}
-		else {
 			this.statusFreq = statusFreq;
-		}
 	}
 
 

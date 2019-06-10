@@ -72,7 +72,10 @@ public class TipoEnsinoDAO {
 					dbc.st = dbc.con.prepareStatement(sql);
 					dbc.st.setInt(1, te.getCodTE());
 					dbc.rs = dbc.st.executeQuery();
-
+					while (dbc.rs.next()) {
+						te.setNomeTE(dbc.rs.getString(2));
+						te.setQtdAlunoTE(dbc.rs.getInt(3));
+					}
 				}			
 			} 
 			catch (SQLException e) {

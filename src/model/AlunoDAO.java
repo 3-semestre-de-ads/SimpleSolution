@@ -28,8 +28,8 @@ public class AlunoDAO {
 	 * @param senha - valor recebido para o atributo senhaAluno
 	 * @return valor boolean - TRUE (select retornado com sucesso) ou FALSE (select sem retorno ou cadastro inativo)
 	 */
-	public String efetuarLogin(String user, String senha) {
-		sql = "SELECT statusAluno, nomeAluno FROM ALUNO WHERE userAluno=? AND senhaAluno=?";
+	public Aluno efetuarLogin(String user, String senha) {
+		sql = "SELECT * FROM ALUNO WHERE userAluno=? AND senhaAluno=?";
 		if (dbc.getConnection()) {
 			try {
 				dbc.st = dbc.con.prepareStatement(sql);
@@ -38,8 +38,20 @@ public class AlunoDAO {
 				dbc.rs = dbc.st.executeQuery();
 				while (dbc.rs.next()) {
 					System.out.println(dbc.rs.getString(1));
-					if (dbc.rs.getString(1).indexOf("A") != -1) {
-						return dbc.rs.getString(2);
+					if (dbc.rs.getString(10).indexOf("A") != -1) {
+						Aluno aluno = new Aluno();
+						aluno.setCodAluno(dbc.rs.getInt(1));
+						aluno.setNomeAluno(dbc.rs.getString(2));
+						aluno.setNascAluno(dbc.rs.getDate(3));
+						aluno.setRgAluno(dbc.rs.getString(4));
+						aluno.setCpfAluno(dbc.rs.getString(5));
+						aluno.setEmailAluno(dbc.rs.getString(6));
+						aluno.setTelAluno(dbc.rs.getString(7));
+						aluno.setUserAluno(dbc.rs.getString(8));
+						aluno.setSenhaAluno(dbc.rs.getString(9));
+						aluno.setStatusAluno(dbc.rs.getString(10));
+						aluno.setCodResp(dbc.rs.getInt(11));
+						return aluno;
 					}
 					else {
 						JOptionPane.showMessageDialog(null,"Usuário Inativo");

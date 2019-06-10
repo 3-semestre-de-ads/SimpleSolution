@@ -56,6 +56,8 @@ public class TurmaDAO {
 		}
 		return listaTurma;
 	}
+	
+
 
 
 
@@ -73,9 +75,13 @@ public class TurmaDAO {
 					dbc.st = dbc.con.prepareStatement(sql);
 					dbc.st.setInt(1, turma.getCodTurma());
 					dbc.rs = dbc.st.executeQuery();
-					//mensalidade.setNomeAluno(dbc.rs.getString(2));
-					//mensalidade.setNomeAluno(dbc.rs.getString(3));
-					//mensaldiade.setNascAluno(dbc.rs.getDate(4));
+					while (dbc.rs.next()) {
+						turma.setQtdAulaTurma(dbc.rs.getInt(2));
+						turma.setHorarioTurma(dbc.rs.getString(3));
+						turma.setDiaTurma(dbc.rs.getString(4));
+						turma.setCodIdioma(dbc.rs.getInt(5));
+						turma.setCodTE(dbc.rs.getInt(6));
+					}
 				}			
 			} 
 			catch (SQLException e) {
@@ -87,6 +93,7 @@ public class TurmaDAO {
 		}
 		return turma; 
 	}
+	
 
 
 

@@ -4,6 +4,8 @@ import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.SWT;
+import org.eclipse.swt.events.MouseEvent;
+import org.eclipse.swt.events.MouseListener;
 import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.events.SelectionListener;
 import org.eclipse.swt.widgets.Table;
@@ -35,10 +37,11 @@ public class TelaIdioma {
 		txbCodigo.setText(Integer.toString(dao.proximoId()));
 		populaTabela();
 		table.setEnabled(false);
+		
 	}
 	private void populaIdioma() {
 		populaTabela();
-		txbIdioma.setEnabled(false);		
+		txbIdioma.setEnabled(false);
 	}
 	
 	private void populaTabela() {
@@ -56,6 +59,7 @@ public class TelaIdioma {
 
 	/**
 	 * Open the window.
+	 * @wbp.parser.entryPoint
 	 */
 	public void open(Idioma idioma) {
 		Display display = Display.getDefault();
@@ -86,23 +90,29 @@ public class TelaIdioma {
 		table.setBounds(10, 72, 424, 153);
 		table.setHeaderVisible(true);
 		table.setLinesVisible(true);
-		table.addSelectionListener(new SelectionListener() {
+		table.addMouseListener(new MouseListener() {
 			
 			@Override
-			public void widgetSelected(SelectionEvent arg0) {
+			public void mouseUp(MouseEvent arg0) {
+				// TODO Auto-generated method stub
 				
+			}
+			
+			@Override
+			public void mouseDown(MouseEvent arg0) {
+				// TODO Auto-generated method stub
+				
+			}
+			
+			@Override
+			public void mouseDoubleClick(MouseEvent arg0) {
 				TableItem[] selection  = table.getSelection();
 
 		        for (int i = 0; i < selection.length; i++) {
 		        	txbCodigo.setText(selection[i].getText(0));
 		        	txbIdioma.setText(selection[i].getText(1));
-		        	
+		        	txbIdioma.setEnabled(true);
 		        }
-			}
-			
-			@Override
-			public void widgetDefaultSelected(SelectionEvent arg0) {
-				// TODO Auto-generated method stub
 				
 			}
 		});

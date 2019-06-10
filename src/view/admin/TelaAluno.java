@@ -23,8 +23,17 @@ import org.eclipse.ui.forms.widgets.FormToolkit;
 
 import model.Aluno;
 import model.AlunoDAO;
+import model.HistTurma;
+import model.HistTurmaDAO;
+import model.Idioma;
+import model.IdiomaDAO;
+import model.MatriculaDAO;
+import model.Professor;
+import model.ProfessorDAO;
 import model.Responsavel;
 import model.ResponsavelDAO;
+import model.Turma;
+import model.TurmaDAO;
 
 import org.eclipse.swt.events.MouseEvent;
 import org.eclipse.swt.events.MouseListener;
@@ -55,6 +64,7 @@ public class TelaAluno {
 	private final FormToolkit formToolkit = new FormToolkit(Display.getDefault());
 	private Table tblResponsavel;
 	private DateTime dtDatNasc;
+	private Label lblTurmasCadastradas;
 	
 	private void populaResponsavel() {		
 		ResponsavelDAO dao = new ResponsavelDAO();
@@ -83,7 +93,9 @@ public class TelaAluno {
 		txbSenha.setText(aluno.getSenhaAluno());
 		txbCodResp.setText(Integer.toString(aluno.getCodResp()));
 		dtDatNasc.getParent().layout();
-
+		tbTurmCad.setVisible(true);
+		lblTurmasCadastradas.setVisible(true);
+		populaTurmaCadastrada(aluno.getCodAluno());
 
 
 	}
@@ -106,6 +118,42 @@ public class TelaAluno {
 		AlunoDAO dao = new AlunoDAO();
 		txbCodigo.setText(Integer.toString(dao.proximoId()));
 		txbLogin.setText(String.format("ALN%05d", dao.proximoId()));
+		tbTurmCad.setVisible(false);
+		lblTurmasCadastradas.setVisible(false);
+		
+	}
+	
+	private void populaTurmaCadastrada(int codAluno) {
+		MatriculaDAO matr_dao = new MatriculaDAO();
+		ArrayList<Integer> lista = matr_dao.consultaTurmaByAluno(codAluno);
+		for (int i = 0; i < lista.size(); i++) {
+			TurmaDAO tm_dao = new TurmaDAO();
+			Turma turma = new Turma();
+			turma.setCodTurma(lista.get(i));
+			turma = tm_dao.consultar(turma);
+			
+			IdiomaDAO idm_dao = new IdiomaDAO();
+			Idioma idioma = new Idioma();
+			idioma.setCodIdioma(turma.getCodIdioma());
+			idioma = idm_dao.consultar(idioma);
+			
+			HistTurmaDAO ht_dao = new HistTurmaDAO();
+			HistTurma ht = new HistTurma();
+			ht.setCodMat(turma.getCodTurma());
+			ht = ht_dao.consultarPorTurma(ht);
+			
+			ProfessorDAO pf_dao = new ProfessorDAO();
+			Professor prof = new Professor();
+			prof.setCodProf(ht.getCodProf());			
+			prof = pf_dao.consultar(prof);
+			
+			TableItem tbi = new TableItem(tbTurmCad, SWT.NONE);
+			String[] valores = {Integer.toString(turma.getCodTurma()), 
+					idioma.getNomeIdioma(),
+					prof.getNomeProf()};
+ 			tbi.setText(valores);
+			
+		}
 	}
 
 
@@ -318,6 +366,7 @@ public class TelaAluno {
 		label_15.setBounds(149, 195, 178, 20);
 		
 		tbTurmCad = new Table(shlAluno, SWT.BORDER | SWT.FULL_SELECTION);
+		tbTurmCad.setEnabled(false);
 		tbTurmCad.setBounds(10, 534, 693, 120);
 		tbTurmCad.setHeaderVisible(true);
 		tbTurmCad.setLinesVisible(true);
@@ -334,7 +383,7 @@ public class TelaAluno {
 		tblclmnProfessor.setWidth(100);
 		tblclmnProfessor.setText("Professor");
 		
-		Label lblTurmasCadastradas = new Label(shlAluno, SWT.NONE);
+		lblTurmasCadastradas = new Label(shlAluno, SWT.NONE);
 		lblTurmasCadastradas.setText("Turmas Cadastradas");
 		lblTurmasCadastradas.setBounds(10, 508, 206, 20);
 		

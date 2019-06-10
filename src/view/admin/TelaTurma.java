@@ -3,18 +3,35 @@ package view.admin;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.swt.widgets.Label;
+
+import java.util.ArrayList;
+
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.widgets.Text;
 
+import model.HistTurma;
+import model.HistTurmaDAO;
+import model.Idioma;
+import model.IdiomaDAO;
+import model.MatriculaDAO;
+import model.Professor;
+import model.ProfessorDAO;
+import model.TipoEnsino;
+import model.TipoEnsinoDAO;
 import model.Turma;
+import model.TurmaDAO;
 
 import org.eclipse.swt.widgets.DateTime;
 import org.eclipse.swt.widgets.Group;
 import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Table;
 import org.eclipse.swt.widgets.TableColumn;
+import org.eclipse.swt.widgets.TableItem;
+import org.eclipse.swt.events.MouseEvent;
+import org.eclipse.swt.events.MouseListener;
 import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;
+import org.eclipse.swt.events.SelectionListener;
 
 public class TelaTurma {
 
@@ -26,20 +43,111 @@ public class TelaTurma {
 	private Text txbCodIdioma;
 	private Text txbIdioma;
 	private Table table;
-	private Text text;
-	private Text text_1;
+	private Text txbCodTE;
+	private Text txbTE;
+	private Text txbHorario;
+	private Label lblNumAlunos;
 
 	private void novaTurma() {
 		table.setEnabled(false);
 		populaTabela();
+		shlTurma.setText("Turma - Nova");
 	}
-	private void populaTurma() {
-		text.setEnabled(false);
-		text_1.setEnabled(false);
+	private void populaTurma(Turma turma) {
+		
+		txbCodTE.setEnabled(false);
+		txbTE.setEnabled(false);
+		TurmaDAO dao = new TurmaDAO();
+		txbCodigo.setText(Integer.toString(turma.getCodTurma()));
+		turma = dao.consultar(turma);		
+		txbDiasAula.setText(turma.getDiaTurma());
+		txbHorario.setText(turma.getHorarioTurma());
+		txbCodProf.setText(""); //alterar aqui depois	
+		
+		Idioma idioma = consultaIdioma(turma);
+		txbCodIdioma.setText(Integer.toString(idioma.getCodIdioma()));
+		txbIdioma.setText(idioma.getNomeIdioma());
+		
+		
+		//Tipo de Ensino
+		TipoEnsino te = consultaTE(turma);
+		txbCodTE.setText(Integer.toString(te.getCodTE()));	
+		txbTE.setText(te.getNomeTE());
+		
+		//Professor
+		Professor prof = consultaProfessor(turma);
+		
+		if (prof.getNomeProf() != null) {
+			txbCodProf.setText(Integer.toString(prof.getCodProf()));
+			txbNomeProf.setText(prof.getNomeProf());
+		}else {
+			txbNomeProf.setText("");
+		}
+		
+				
+		
+		lblNumAlunos.setText(Integer.toString(consultaNumeroAlunos(turma)));
 		populaTabela();
+		shlTurma.setText("Turma - " + txbIdioma.getText() + " - PROF: " + txbNomeProf.getText());
 	}
 	private void populaTabela() {
+		table.removeAll();
+		TurmaDAO dao = new TurmaDAO();
+
+		ArrayList<Turma> lista = dao.consultarTodos();
 		
+		for (int i = 0; i < lista.size(); i++) {
+			
+			TableItem tbi = new TableItem(table, SWT.NONE);
+			
+			Idioma idioma = consultaIdioma(lista.get(i));
+			Professor prof = consultaProfessor(lista.get(i));
+			TipoEnsino te = consultaTE(lista.get(i));
+			
+			String[] valores = {Integer.toString(lista.get(i).getCodTurma()), 
+					idioma.getNomeIdioma(),
+					prof.getNomeProf(),
+					te.getNomeTE(),
+					Integer.toString(consultaNumeroAlunos(lista.get(i)))};
+ 			tbi.setText(valores);
+		}
+	}
+	
+	private Idioma consultaIdioma(Turma turma) {
+		IdiomaDAO dao = new IdiomaDAO();
+		Idioma idioma = new Idioma();
+		
+		idioma.setCodIdioma(turma.getCodIdioma());		
+		idioma = dao.consultar(idioma);
+		return idioma;
+	}
+	
+	private TipoEnsino consultaTE(Turma turma) {
+		TipoEnsinoDAO dao = new TipoEnsinoDAO();
+		TipoEnsino te = new TipoEnsino();
+		
+		te.setCodTE(turma.getCodTE());
+		te = dao.consultar(te);
+		return te;
+	}
+	
+	private Professor consultaProfessor(Turma turma) {
+		HistTurma ht = new HistTurma();
+		HistTurmaDAO ht_dao = new HistTurmaDAO();
+		ht.setCodMat(turma.getCodTurma());
+		ht = ht_dao.consultarPorTurma(ht);
+		
+		Professor professor = new Professor();
+		ProfessorDAO dao = new ProfessorDAO();
+		professor.setCodProf(ht.getCodProf());
+		professor = dao.consultar(professor);
+		
+		return professor;	
+	}
+	
+	private int consultaNumeroAlunos(Turma turma) {
+		MatriculaDAO dao = new MatriculaDAO();
+		return dao.alunosNaTurma(turma);
 	}
 
 	/**
@@ -52,7 +160,8 @@ public class TelaTurma {
 		if (turma == null) {
 			novaTurma();
 		}else {
-			populaTurma();
+			turma.setCodTurma(1);
+			populaTurma(turma);
 		}
 		shlTurma.open();
 		shlTurma.layout();
@@ -91,9 +200,6 @@ public class TelaTurma {
 		lblHorrio.setText("Horário");
 		lblHorrio.setBounds(10, 132, 111, 20);
 		
-		DateTime dtHorario = new DateTime(shlTurma, SWT.BORDER | SWT.TIME | SWT.SHORT);
-		dtHorario.setBounds(10, 158, 181, 34);
-		
 		Group grpProfessor = new Group(shlTurma, SWT.NONE);
 		grpProfessor.setText("Professor");
 		grpProfessor.setBounds(222, 10, 348, 174);
@@ -110,11 +216,8 @@ public class TelaTurma {
 		lblNome.setBounds(10, 62, 68, 20);
 		
 		txbNomeProf = new Text(grpProfessor, SWT.BORDER);
+		txbNomeProf.setEnabled(false);
 		txbNomeProf.setBounds(10, 88, 326, 30);
-		
-		Button btnNewButton = new Button(grpProfessor, SWT.NONE);
-		btnNewButton.setBounds(241, 22, 95, 34);
-		btnNewButton.setText("Pesquisar");
 		
 		Group grpIdioma = new Group(shlTurma, SWT.NONE);
 		grpIdioma.setText("Idioma");
@@ -134,12 +237,43 @@ public class TelaTurma {
 		lblIdioma.setBounds(10, 62, 68, 20);
 		
 		txbIdioma = new Text(grpIdioma, SWT.BORDER);
+		txbIdioma.setEnabled(false);
 		txbIdioma.setBounds(10, 88, 159, 30);
 		
 		table = new Table(shlTurma, SWT.BORDER | SWT.FULL_SELECTION);
 		table.setBounds(222, 198, 563, 174);
 		table.setHeaderVisible(true);
 		table.setLinesVisible(true);
+		table.addMouseListener(new MouseListener() {
+			
+			@Override
+			public void mouseUp(MouseEvent arg0) {
+				// TODO Auto-generated method stub
+				
+			}
+			
+			@Override
+			public void mouseDown(MouseEvent arg0) {
+				// TODO Auto-generated method stub
+				
+			}
+			
+			@Override
+			public void mouseDoubleClick(MouseEvent arg0) {
+				TableItem[] selection  = table.getSelection();
+				Turma turma = new Turma();
+
+		        for (int i = 0; i < selection.length; i++) {
+		        	turma.setCodTurma(Integer.parseInt(selection[i].getText(0)));
+		        	txbCodigo.setText(selection[i].getText(0));
+		        	
+		        }
+		        
+		        populaTurma(turma);
+				
+			}				
+			
+		});
 		
 		TableColumn tblclmnCodigo = new TableColumn(table, SWT.NONE);
 		tblclmnCodigo.setWidth(100);
@@ -183,23 +317,28 @@ public class TelaTurma {
 		label_2.setText("Código");
 		label_2.setBounds(10, 0, 68, 20);
 		
-		text = new Text(grpTipoDeEnsino, SWT.BORDER);
-		text.setBounds(10, 26, 159, 30);
+		txbCodTE = new Text(grpTipoDeEnsino, SWT.BORDER);
+		txbCodTE.setEnabled(false);
+		txbCodTE.setBounds(10, 26, 159, 30);
 		
 		Label lblTipoDeEnsino = new Label(grpTipoDeEnsino, SWT.NONE);
 		lblTipoDeEnsino.setText("Tipo de Ensino");
 		lblTipoDeEnsino.setBounds(10, 62, 159, 20);
 		
-		text_1 = new Text(grpTipoDeEnsino, SWT.BORDER);
-		text_1.setBounds(10, 88, 159, 30);
+		txbTE = new Text(grpTipoDeEnsino, SWT.BORDER);
+		txbTE.setEnabled(false);
+		txbTE.setBounds(10, 88, 159, 30);
 		
 		Label lblNewLabel_1 = new Label(shlTurma, SWT.NONE);
 		lblNewLabel_1.setBounds(10, 392, 130, 20);
 		lblNewLabel_1.setText("Número de Alunos:");
 		
-		Label lblNumAlunos = new Label(shlTurma, SWT.NONE);
+		lblNumAlunos = new Label(shlTurma, SWT.NONE);
 		lblNumAlunos.setBounds(146, 392, 68, 20);
 		lblNumAlunos.setText("0");
+		
+		txbHorario = new Text(shlTurma, SWT.BORDER);
+		txbHorario.setBounds(10, 158, 181, 30);
 
 	}
 }

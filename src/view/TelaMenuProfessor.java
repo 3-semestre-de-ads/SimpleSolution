@@ -3,6 +3,7 @@ package view;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Shell;
 
+import model.Professor;
 import view.professor.TelaFrequencia;
 import view.professor.AppNotas;
 
@@ -11,6 +12,7 @@ import org.eclipse.swt.widgets.MenuItem;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;
+import org.eclipse.swt.events.SelectionListener;
 import org.eclipse.swt.layout.FillLayout;
 
 public class TelaMenuProfessor {
@@ -22,12 +24,12 @@ public class TelaMenuProfessor {
 	 * Open the window.
 	 * @wbp.parser.entryPoint
 	 */
-	public void open(String professor) {
+	public void open(Professor professor) {
 		Display display = Display.getDefault();
 		
 		shlSimplesolutionAluno = new Shell();
 		shlSimplesolutionAluno.setMaximized(true);
-		shlSimplesolutionAluno.setText("SimpleSolution - "+ professor);
+		shlSimplesolutionAluno.setText("SimpleSolution, Bem Vindo Professor - "+ professor.getNomeProf());
 		
 		Menu menu = new Menu(shlSimplesolutionAluno, SWT.BAR);
 		shlSimplesolutionAluno.setMenuBar(menu);
@@ -66,9 +68,39 @@ public class TelaMenuProfessor {
 			 */
 			MenuItem itemFrequencia = new MenuItem(menuAula, SWT.NONE);
 			itemFrequencia.setText("Frequencia");
+			itemFrequencia.addSelectionListener(new SelectionListener() {
+				
+				@Override
+				public void widgetSelected(SelectionEvent arg0) {
+					TelaFrequencia tela = new TelaFrequencia();
+					tela.open(professor);
+					
+				}
+				
+				@Override
+				public void widgetDefaultSelected(SelectionEvent arg0) {
+
+					
+				}
+			});
 
 			MenuItem itemNota = new MenuItem(menuAula, SWT.NONE);
 			itemNota.setText("Nota");
+			itemNota.addSelectionListener(new SelectionListener() {
+				
+				@Override
+				public void widgetSelected(SelectionEvent arg0) {
+					AppNotas tela = new AppNotas();
+					tela.open(professor);
+					
+				}
+				
+				@Override
+				public void widgetDefaultSelected(SelectionEvent arg0) {
+					// TODO Auto-generated method stub
+					
+				}
+			});
 
 			
 		

@@ -1,20 +1,21 @@
 package model;
 
 import java.sql.SQLException;
+import java.util.ArrayList;
 
 import javax.swing.JOptionPane;
 
 import services.DbConn;
 
 /**
- * Essa classe é responsável por acessar o banco de dados e atualizar a tabela NOTA
- * Comunicação com a classe Nota
+ * Essa classe ï¿½ responsï¿½vel por acessar o banco de dados e atualizar a tabela NOTA
+ * Comunicaï¿½ï¿½o com a classe Nota
  * @author Simple Solution Devs
  */
 public class NotaDAO {
 
 	/**
-	 * Atributos para realizar conexão com o banco de dados
+	 * Atributos para realizar conexï¿½o com o banco de dados
 	 */
 	private DbConn dbc = new DbConn();
 	private String men, sql;
@@ -22,7 +23,7 @@ public class NotaDAO {
 
 	
 	/**
-	 * Método responsável por retornar uma lista com o registro de todos as notas
+	 * Mï¿½todo responsï¿½vel por retornar uma lista com o registro de todos as notas
 	 * @return listaNota - lista de notas (array)
 	 */
 	public Nota[] consultarTodos() {
@@ -58,13 +59,46 @@ public class NotaDAO {
 		}
 		return listaNota;
 	}
+	
+	public ArrayList<Nota> consultarByMatricula(int codMatricula) {
+		sql = "SELECT * FROM NOTA WHERE codMat=?;";
+		ArrayList<Nota> listaNota = new ArrayList<Nota>();
+
+		if (dbc.getConnection()) {
+			try {
+				if (dbc.getConnection()) {
+					dbc.st = dbc.con.prepareStatement(sql);
+					dbc.st.setInt(1, codMatricula);
+					dbc.rs = dbc.st.executeQuery();
+
+					while (dbc.rs.next()) {
+						Nota nota = new Nota();
+						nota.setCodNota(dbc.rs.getInt(1));
+						nota.setDataNota(dbc.rs.getDate(2));
+						nota.setValorNota(dbc.rs.getDouble(3));
+						nota.setCodMat(dbc.rs.getInt(4));
+						nota.setCodAval(dbc.rs.getInt(5));
+						listaNota.add(nota);
+					}									
+				}			
+			} 
+			catch (SQLException e) {
+				listaNota=null;
+				JOptionPane.showMessageDialog(null,e, "Falha", 1);
+			} 
+			finally {
+				dbc.close();
+			}
+		}
+		return listaNota;
+	}
 
 
 
 	/**
-	 * Método responsável por retornar um registro de acordo com o código fornecido
+	 * Mï¿½todo responsï¿½vel por retornar um registro de acordo com o cï¿½digo fornecido
 	 * Tabela NOTA
-	 * @param nota - objeto instânciado da classe Nota
+	 * @param nota - objeto instï¿½nciado da classe Nota
 	 * @return nota
 	 */
 	public Nota consultar(Nota nota) {
@@ -94,9 +128,9 @@ public class NotaDAO {
 
 
 	/**
-	 * Método responsável por retornar o próximo número do índice no banco de dados
+	 * Mï¿½todo responsï¿½vel por retornar o prï¿½ximo nï¿½mero do ï¿½ndice no banco de dados
 	 * Tabela NOTA
-	 * @return r - valor do próximo índice
+	 * @return r - valor do prï¿½ximo ï¿½ndice
 	 */
 	public int proximoId() {
 		sql = "SELECT MAX('codNota') FROM NOTA;";
@@ -120,9 +154,9 @@ public class NotaDAO {
 
 	
 	/**
-	 * Método responsável por inserir um novo registro ou atualizar um registro existente
+	 * Mï¿½todo responsï¿½vel por inserir um novo registro ou atualizar um registro existente
 	 * Tabela NOTA
-	 * @param nota - objeto instânciado da classe Nota
+	 * @param nota - objeto instï¿½nciado da classe Nota
 	 * @return men - mensagem de aviso
 	 */
 	public String inserirAtualizar(Nota nota) {

@@ -4,6 +4,10 @@ import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.swt.widgets.Menu;
 import org.eclipse.swt.widgets.MenuItem;
+
+import java.util.ArrayList;
+import java.util.Date;
+
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;
@@ -12,41 +16,67 @@ import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.TableColumn;
+import org.eclipse.swt.widgets.TableItem;
+
+import model.Aluno;
+import model.Frequencia;
+import model.FrequenciaDAO;
+import model.Matricula;
+import model.MatriculaDAO;
+import model.Nota;
+import model.NotaDAO;
 
 public class TelaMenuAluno {
-	private Table table;
-	private Table table_1;
-	private Table table_2;
+	private Table tbFaltas;
+	private Table tbNotas;
+	
+	private void populaNotas(int codAluno) {
+		MatriculaDAO mtr_dao = new MatriculaDAO();
+		ArrayList<Matricula> lista = mtr_dao.consultaMatriculaByAluno(codAluno);
+		for (int i = 0; i < lista.size(); i++) {
+			NotaDAO nota_dao = new NotaDAO();
+			ArrayList<Nota> nota = new ArrayList<Nota>();
+			nota = nota_dao.consultarByMatricula(lista.get(i).getCodMat());
+			for (int j = 0; j < nota.size(); j++) {
+				TableItem tbi = new TableItem(tbNotas, SWT.NONE);
+				String[] valores = {Integer.toString(lista.get(i).getCodTurma()), 
+									nota.get(j).getDataNota().toString(),
+									Double.toString(nota.get(j).getValorNota())};
+	 			tbi.setText(valores);
+			}
+		}
+		tbNotas.layout();
+		
+	}
+	private void populaFaltas(int codAluno) {
+		MatriculaDAO mtr_dao = new MatriculaDAO();
+		ArrayList<Matricula> lista = mtr_dao.consultaMatriculaByAluno(codAluno);
+		for (int i = 0; i < lista.size(); i++) {
+			FrequenciaDAO freq_dao = new FrequenciaDAO();
+			ArrayList<Frequencia> lista_freq = freq_dao.consultarByCodMat(lista.get(i).getCodMat());
+			for (int j = 0; j < lista_freq.size(); j++) {
+				TableItem tbi = new TableItem(tbFaltas, SWT.NONE);
+				String[] valores = {Integer.toString(lista.get(i).getCodTurma()), 
+									lista_freq.get(j).getDataFreq().toString(),
+									lista_freq.get(j).getStatusFreq()};
+	 			tbi.setText(valores);
+			}
+		}
+		tbFaltas.layout();
+	}
 
 	/**
 	 * Open the window.
 	 * @wbp.parser.entryPoint
 	 */
-	public void open(String aluno) {
+	public void open(Aluno aluno) {
 		Display display = Display.getDefault();
 		Shell shell = new Shell();
 		shell.setMaximized(true);
-		shell.setText("Simple Solution - "+aluno);
-		GridLayout gl_shell = new GridLayout(3, false);
+		shell.setText("Simple Solution, Bem Vindo - "+ aluno.getNomeAluno());
+		GridLayout gl_shell = new GridLayout(2, false);
 		gl_shell.verticalSpacing = 3;
 		shell.setLayout(gl_shell);
-		
-		Menu menu = new Menu(shell, SWT.BAR);
-		shell.setMenuBar(menu);
-		
-		/*
-		 * Criando Menu Arquivo
-		 */
-		MenuItem itemArquivo = new MenuItem(menu, SWT.CASCADE);
-		itemArquivo.setText("Arquivo");		
-		Menu menuArquivo= new Menu(itemArquivo);
-		itemArquivo.setMenu(menuArquivo);
-		
-			/*
-			 * Criação de Submenus Arquivo
-			 */
-			MenuItem itemSair = new MenuItem(menuArquivo, SWT.NONE);
-			itemSair.setText("Logoff");
 
 		
 		Label lblNewLabel = new Label(shell, SWT.NONE);
@@ -55,51 +85,43 @@ public class TelaMenuAluno {
 		Label lblNotas = new Label(shell, SWT.NONE);
 		lblNotas.setText("Notas");
 		
-		Label lblMensalidaes = new Label(shell, SWT.NONE);
-		lblMensalidaes.setText("Mensalidades");
+		tbFaltas = new Table(shell, SWT.BORDER | SWT.FULL_SELECTION);
+		tbFaltas.setEnabled(false);
+		tbFaltas.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true, 1, 1));
+		tbFaltas.setHeaderVisible(true);
+		tbFaltas.setLinesVisible(true);
 		
-		table = new Table(shell, SWT.BORDER | SWT.FULL_SELECTION);
-		table.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true, 1, 1));
-		table.setHeaderVisible(true);
-		table.setLinesVisible(true);
-		
-		TableColumn tblclmnTurma = new TableColumn(table, SWT.NONE);
+		TableColumn tblclmnTurma = new TableColumn(tbFaltas, SWT.NONE);
 		tblclmnTurma.setWidth(120);
 		tblclmnTurma.setText("Turma");
 		
-		TableColumn tblclmnFaltas = new TableColumn(table, SWT.NONE);
+		TableColumn tblclmnData = new TableColumn(tbFaltas, SWT.NONE);
+		tblclmnData.setWidth(120);
+		tblclmnData.setText("Data");
+		
+		TableColumn tblclmnFaltas = new TableColumn(tbFaltas, SWT.NONE);
 		tblclmnFaltas.setWidth(40);
-		tblclmnFaltas.setText("Faltas");
+		tblclmnFaltas.setText("Status");
 		
-		table_1 = new Table(shell, SWT.BORDER | SWT.FULL_SELECTION);
-		table_1.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true, 1, 1));
-		table_1.setHeaderVisible(true);
-		table_1.setLinesVisible(true);
+		tbNotas = new Table(shell, SWT.BORDER | SWT.FULL_SELECTION);
+		tbNotas.setEnabled(false);
+		tbNotas.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true, 1, 1));
+		tbNotas.setHeaderVisible(true);
+		tbNotas.setLinesVisible(true);
 		
-		TableColumn tableColumn = new TableColumn(table_1, SWT.NONE);
+		TableColumn tableColumn = new TableColumn(tbNotas, SWT.NONE);
 		tableColumn.setWidth(120);
 		tableColumn.setText("Turma");
 		
-		TableColumn tblclmnNotas = new TableColumn(table_1, SWT.NONE);
+		TableColumn tblclmnNotas = new TableColumn(tbNotas, SWT.NONE);
 		tblclmnNotas.setWidth(40);
-		tblclmnNotas.setText("Notas");
+		tblclmnNotas.setText("Data");
 		
-		table_2 = new Table(shell, SWT.BORDER | SWT.FULL_SELECTION);
-		table_2.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true, 1, 1));
-		table_2.setHeaderVisible(true);
-		table_2.setLinesVisible(true);
-		
-		TableColumn tblclmnValor = new TableColumn(table_2, SWT.NONE);
-		tblclmnValor.setWidth(120);
-		tblclmnValor.setText("Valor");
-		
-		TableColumn tblclmnData = new TableColumn(table_2, SWT.NONE);
-		tblclmnData.setWidth(40);
-		tblclmnData.setText("Data");
-		new Label(shell, SWT.NONE);
-		new Label(shell, SWT.NONE);
-		new Label(shell, SWT.NONE);
-
+		TableColumn tableColumn_1 = new TableColumn(tbNotas, SWT.NONE);
+		tableColumn_1.setWidth(40);
+		tableColumn_1.setText("Notas");
+		populaNotas(aluno.getCodAluno());
+		populaFaltas(aluno.getCodAluno());
 
 		shell.open();
 		shell.layout();

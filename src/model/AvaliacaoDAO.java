@@ -1,20 +1,21 @@
 package model;
 
 import java.sql.SQLException;
+import java.util.ArrayList;
 
 import javax.swing.JOptionPane;
 
 import services.DbConn;
 
 /**
- * Essa classe é responsável por acessar o banco de dados e atualizar a tabela AVALIACAO
- * Comunicação com a classe Avaliacao
+ * Essa classe ï¿½ responsï¿½vel por acessar o banco de dados e atualizar a tabela AVALIACAO
+ * Comunicaï¿½ï¿½o com a classe Avaliacao
  * @author Simple Solution Devs
  */
 public class AvaliacaoDAO {
 	
 	/**
-	 * Atributos para realizar conexão com o banco de dados
+	 * Atributos para realizar conexï¿½o com o banco de dados
 	 */
 	private DbConn dbc = new DbConn();
 	private String sql;
@@ -23,9 +24,9 @@ public class AvaliacaoDAO {
 	
 	
 	/**
-	 * Método responsável por retornar o próximo número do índice no banco de dados
+	 * Mï¿½todo responsï¿½vel por retornar o prï¿½ximo nï¿½mero do ï¿½ndice no banco de dados
 	 * Tabela AVALIACAO
-	 * @return r - valor do próximo índice
+	 * @return r - valor do prï¿½ximo ï¿½ndice
 	 */
 	public int proximoId() {
 		sql = "SELECT MAX('codAval') FROM AVALIACAO;";
@@ -47,28 +48,57 @@ public class AvaliacaoDAO {
 	
 	
 	/**
-	 * Método responsável por retornar uma lista com o registro de todos as avaliações
-	 * @return listaAval - lista de avaliações (array)
+	 * Mï¿½todo responsï¿½vel por retornar uma lista com o registro de todos as avaliaï¿½ï¿½es
+	 * @return listaAval - lista de avaliaï¿½ï¿½es (array)
 	 */
-	public Avaliacao[] consultarTodos() {
+	public ArrayList<Avaliacao> consultarTodos() {
 		sql = "SELECT * FROM AVALIACAO;";
-		Avaliacao[] listaAval = new Avaliacao[] {null};
+		ArrayList<Avaliacao> listaAval = new ArrayList<Avaliacao>();
 		if (dbc.getConnection()) {
 			try {
 				if (dbc.getConnection()) {
 					dbc.st = dbc.con.prepareStatement(sql);
 					dbc.rs = dbc.st.executeQuery();
-					dbc.rs.last();
-					listaAval = new Avaliacao[dbc.rs.getRow()];
-					dbc.rs.beforeFirst();
-					int count=0;
+
 					while (dbc.rs.next()) { 
-						Avaliacao avaliacao = listaAval[count];
+						Avaliacao avaliacao = new Avaliacao();
 						avaliacao.setCodAval(dbc.rs.getInt(1));
 						avaliacao.setNomeAval(dbc.rs.getString(2));
 						avaliacao.setValorAval(dbc.rs.getDouble(3));
 						avaliacao.setCodAdmin(dbc.rs.getInt(4));
-						count ++;
+						listaAval.add(avaliacao);
+					}									
+				}			
+			} 
+			catch (SQLException e) {
+				listaAval = null;
+				JOptionPane.showMessageDialog(null,e, "Falha", 1);
+			} 
+			finally {
+				dbc.close();
+			}
+		}
+		return listaAval;
+	}
+	
+	
+	public ArrayList<Avaliacao> consultarTodosProf(int codProf) {
+		sql = "SELECT * FROM AVALIACAO WHERE codAdmin=?;";
+		ArrayList<Avaliacao> listaAval = new ArrayList<Avaliacao>();
+		if (dbc.getConnection()) {
+			try {
+				if (dbc.getConnection()) {
+					dbc.st = dbc.con.prepareStatement(sql);
+					dbc.st.setInt(1, codProf);
+					dbc.rs = dbc.st.executeQuery();
+
+					while (dbc.rs.next()) { 
+						Avaliacao avaliacao = new Avaliacao();
+						avaliacao.setCodAval(dbc.rs.getInt(1));
+						avaliacao.setNomeAval(dbc.rs.getString(2));
+						avaliacao.setValorAval(dbc.rs.getDouble(3));
+						avaliacao.setCodAdmin(dbc.rs.getInt(4));
+						listaAval.add(avaliacao);
 					}									
 				}			
 			} 
@@ -86,9 +116,9 @@ public class AvaliacaoDAO {
 	
 	
 	/**
-	 * Método responsável por retornar um registro de acordo com o código fornecido
+	 * Mï¿½todo responsï¿½vel por retornar um registro de acordo com o cï¿½digo fornecido
 	 * Tabela AVALIACAO
-	 * @param avaliacao - objeto instânciado da classe Avaliacao
+	 * @param avaliacao - objeto instï¿½nciado da classe Avaliacao
 	 * @return avaliacao 
 	 */
 	public Avaliacao consultar(Avaliacao avaliacao) {
@@ -117,9 +147,9 @@ public class AvaliacaoDAO {
 	
 	
 	/**
-	 * Método responsável por inserir um novo registro ou atualizar um registro existente
+	 * Mï¿½todo responsï¿½vel por inserir um novo registro ou atualizar um registro existente
 	 * Tabela AVALIACAO
-	 * @param avaliacao - objeto instânciado da classe Avaliacao
+	 * @param avaliacao - objeto instï¿½nciado da classe Avaliacao
 	 * @return men - mensagem de aviso
 	 */
 	public String inserirAtualizar(Avaliacao avaliacao) {
