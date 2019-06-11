@@ -1,0 +1,6 @@
+model
+org.eclipse.wb.swt
+services
+view
+view.admin
+view.professor
